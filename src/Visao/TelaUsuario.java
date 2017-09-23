@@ -8,6 +8,12 @@ package Visao;
 import java.sql.*;
 import dao.ModuloConexao;
 import java.awt.Color;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class TelaUsuario extends javax.swing.JInternalFrame {
@@ -27,6 +33,16 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         //aqui está chamando o método conector(); 
         //que chama a class ModuloConexao que está 
         //dentro do pacote dao
+        itensObrigatorios();
+    }
+
+    private void itensObrigatorios() {
+        campo.setForeground(Color.RED);
+        lblSenha.setForeground(Color.RED);
+        lblEmail.setForeground(Color.RED);
+        lblNome.setForeground(Color.RED);
+        lblPerfil.setForeground(Color.RED);
+        lblCodigo.setForeground(Color.RED);
     }
 
     private void consultar() {//metodo para consultar usuário
@@ -51,7 +67,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     TextFieldUserEmail.setText(rs.getString(8));
                     ComboBoxUserPerfil.setSelectedItem(rs.getString(4));// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(rs.getString(3));
-                    TextFieldConfirmar.setText(rs.getString(3));
                     FormattedTextFieldData_Nasc.setText(rs.getString(5));
 
                 } else {
@@ -64,7 +79,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     TextFieldUserEmail.setText(null);
                     //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(null);
-                    TextFieldConfirmar.setText(null);
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
@@ -76,12 +90,13 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private void adicionar() {//metodo para adicionar usuário
 
         //a string sql é executada dentro do banco de dados passando os valores que serão inseridos dentro do banco
-        String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email) values (?,?,?,?,?,?,?,?)";
+        String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email,foto,rota) values (?,?,?,?,?,?,?,?,?,?)";
 
         try {
             pst = conexao.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
 
             //as linhas abaixo insere os valores que são digitados pelo usuário
+            FileInputStream arquivoFoto;
             pst.setString(1, TextFieldUserCodigo.getText());
             pst.setString(2, TextFieldUserNome.getText());
             pst.setString(3, TextFieldUserSenha.getText());
@@ -90,9 +105,12 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(6, TextFieldUserCelular.getText());
             pst.setString(7, TextFieldResidencial.getText());
             pst.setString(8, TextFieldUserEmail.getText());
+            arquivoFoto = new FileInputStream(TextField_Path.getText());
+            pst.setBinaryStream(9, arquivoFoto);
+            pst.setString(10, TextField_Path.getText());
 
             //validaçao dos campos obrigatórios
-            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || FormattedTextFieldData_Nasc.getText().isEmpty() || TextFieldUserCelular.getText().isEmpty() || TextFieldResidencial.getText().isEmpty() || TextFieldUserEmail.getText().isEmpty() || TextFieldConfirmar.getText().isEmpty()) {
+            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos!");//se os campos estiverem vazios retorna essa mensagem para o usuario
 
             } else {
@@ -112,7 +130,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     TextFieldUserEmail.setText(null);
                     //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(null);
-                    TextFieldConfirmar.setText(null);
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
@@ -129,17 +146,17 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=? where id_usuario=?";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setString(1,TextFieldUserNome.getText());
-            pst.setString(2,TextFieldUserCelular.getText());
-            pst.setString(3,TextFieldResidencial.getText());
-            pst.setString(4,TextFieldUserEmail.getText());
-            pst.setString(5,ComboBoxUserPerfil.getSelectedItem().toString());
-            pst.setString(6,TextFieldUserSenha.getText());
-            pst.setString(7,FormattedTextFieldData_Nasc.getText());
-            pst.setString(8,TextFieldUserCodigo.getText());
-            
+            pst.setString(1, TextFieldUserNome.getText());
+            pst.setString(2, TextFieldUserCelular.getText());
+            pst.setString(3, TextFieldResidencial.getText());
+            pst.setString(4, TextFieldUserEmail.getText());
+            pst.setString(5, ComboBoxUserPerfil.getSelectedItem().toString());
+            pst.setString(6, TextFieldUserSenha.getText());
+            pst.setString(7, FormattedTextFieldData_Nasc.getText());
+            pst.setString(8, TextFieldUserCodigo.getText());
+
             //validaçao dos campos obrigatórios
-            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || FormattedTextFieldData_Nasc.getText().isEmpty() || TextFieldUserCelular.getText().isEmpty() || TextFieldResidencial.getText().isEmpty() || TextFieldUserEmail.getText().isEmpty() || TextFieldConfirmar.getText().isEmpty()) {
+            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos!");//se os campos estiverem vazios retorna essa mensagem para o usuario
 
             } else {
@@ -159,7 +176,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     TextFieldUserEmail.setText(null);
                     //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(null);
-                    TextFieldConfirmar.setText(null);
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
@@ -179,7 +195,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         TextFieldUserNome = new javax.swing.JTextField();
@@ -194,13 +209,20 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         TextFieldUserSenha = new javax.swing.JTextField();
-        TextFieldConfirmar = new javax.swing.JTextField();
         ComboBoxUserPerfil = new javax.swing.JComboBox<>();
         FormattedTextFieldData_Nasc = new javax.swing.JFormattedTextField();
         TextFieldUserCelular = new javax.swing.JFormattedTextField();
         TextFieldResidencial = new javax.swing.JFormattedTextField();
         jLabel10 = new javax.swing.JLabel();
         campo = new javax.swing.JLabel();
+        lblSenha = new javax.swing.JLabel();
+        lblCodigo = new javax.swing.JLabel();
+        lblPerfil = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        LabelFoto = new javax.swing.JLabel();
+        Button_Add_Image = new javax.swing.JButton();
+        TextField_Path = new javax.swing.JTextField();
 
         setBorder(null);
         setClosable(true);
@@ -208,6 +230,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Usuários");
+        setToolTipText("Adicionar Imagem");
         setMinimumSize(new java.awt.Dimension(833, 473));
         setPreferredSize(new java.awt.Dimension(833, 476));
         setVisible(true);
@@ -217,9 +240,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel2.setText("Senha");
-
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel3.setText("Confirmar Senha");
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel4.setText("Celular");
@@ -292,16 +312,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         TextFieldUserSenha.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        TextFieldConfirmar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-
         ComboBoxUserPerfil.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Adminstrador" }));
 
-        try {
-            FormattedTextFieldData_Nasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####/##/##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
         FormattedTextFieldData_Nasc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         try {
@@ -321,8 +334,33 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel10.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel10.setText("Campos obrigatórios");
 
-        campo.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        campo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         campo.setText("*");
+
+        lblSenha.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblSenha.setText("*");
+
+        lblCodigo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblCodigo.setText("*");
+
+        lblPerfil.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblPerfil.setText("*");
+
+        lblNome.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblNome.setText("*");
+
+        lblEmail.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblEmail.setText("*");
+
+        LabelFoto.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        Button_Add_Image.setText("Adicionar");
+        Button_Add_Image.setToolTipText("Adicionar Imagem");
+        Button_Add_Image.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_Add_ImageActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -338,53 +376,71 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(51, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(TextFieldConfirmar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(campo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel10))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblSenha)
+                                    .addComponent(lblPerfil)
+                                    .addComponent(lblNome))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(jLabel2)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblEmail)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(102, 102, 102))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel4)))
+                                .addGap(10, 10, 10)
+                                .addComponent(TextFieldUserCelular))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TextFieldUserEmail)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(TextFieldUserCelular)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addComponent(TextFieldUserNome))
-                .addGap(47, 47, 47))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(campo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(TextFieldUserNome, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(TextFieldResidencial)
+                                    .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(316, 316, 316)
+                                .addComponent(Button_Add_Image)))))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
@@ -398,42 +454,58 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     .addComponent(ButtonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ButtonApagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(82, 82, 82)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(campo))
-                .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel7)
-                    .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(TextFieldUserNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(173, 173, 173)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(campo))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel7)
+                            .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCodigo)
+                            .addComponent(lblPerfil)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(TextFieldUserNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNome))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Button_Add_Image))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
                     .addComponent(jLabel9)
                     .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TextFieldUserCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                    .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSenha))
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
                     .addComponent(jLabel5)
                     .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68))
+                    .addComponent(lblEmail)
+                    .addComponent(jLabel8)
+                    .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
 
-        setBounds(0, 0, 967, 627);
+        setBounds(0, 0, 980, 627);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TextFieldUserEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldUserEmailActionPerformed
@@ -466,31 +538,53 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         alterar();
     }//GEN-LAST:event_ButtonAtualizarActionPerformed
 
+    private void Button_Add_ImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_Add_ImageActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser escolher = new JFileChooser();
+            int janela = escolher.showOpenDialog(this);
+            if (janela == JFileChooser.APPROVE_OPTION) {
+                File arquivo = escolher.getSelectedFile();
+                TextField_Path.setText(String.valueOf(arquivo));
+                Image foto = getToolkit().getImage(TextField_Path.getText());
+                LabelFoto.setIcon(new ImageIcon(foto));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_Button_Add_ImageActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonAdicionar;
     private javax.swing.JButton ButtonApagar;
     private javax.swing.JButton ButtonAtualizar;
     private javax.swing.JButton ButtonConsultar;
+    private javax.swing.JButton Button_Add_Image;
     private javax.swing.JComboBox<String> ComboBoxUserPerfil;
     private javax.swing.JFormattedTextField FormattedTextFieldData_Nasc;
-    private javax.swing.JTextField TextFieldConfirmar;
+    private javax.swing.JLabel LabelFoto;
     private javax.swing.JFormattedTextField TextFieldResidencial;
     private javax.swing.JFormattedTextField TextFieldUserCelular;
     private javax.swing.JTextField TextFieldUserCodigo;
     private javax.swing.JTextField TextFieldUserEmail;
     private javax.swing.JTextField TextFieldUserNome;
     private javax.swing.JTextField TextFieldUserSenha;
+    private javax.swing.JTextField TextField_Path;
     private javax.swing.JLabel campo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblPerfil;
+    private javax.swing.JLabel lblSenha;
     // End of variables declaration//GEN-END:variables
 }
