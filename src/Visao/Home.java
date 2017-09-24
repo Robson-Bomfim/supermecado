@@ -5,7 +5,6 @@
  */
 package Visao;
 
-import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,13 +38,15 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        LabelUsuar = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         LabelTipoUser = new javax.swing.JLabel();
-        LabelData = new javax.swing.JLabel();
-        LabelHora = new javax.swing.JLabel();
-        Desktop = new javax.swing.JDesktopPane();
+        LblUsuario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        LabelHora = new javax.swing.JLabel();
+        LabelData = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        LabelUsuario = new javax.swing.JLabel();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
         Menu = new javax.swing.JMenuBar();
         MenuCadastro = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -69,32 +70,38 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        LabelUsuar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+
+        jLabel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         LabelTipoUser.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        LabelTipoUser.setText("Usuario:");
+        LabelTipoUser.setText("usuario");
 
-        LabelData.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-
-        LabelHora.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-
-        javax.swing.GroupLayout DesktopLayout = new javax.swing.GroupLayout(Desktop);
-        Desktop.setLayout(DesktopLayout);
-        DesktopLayout.setHorizontalGroup(
-            DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        DesktopLayout.setVerticalGroup(
-            DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 476, Short.MAX_VALUE)
-        );
+        LblUsuario.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        LblUsuario.setText("nome usuario");
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel2.setText("Data:");
+        jLabel2.setText("Hora");
+
+        LabelHora.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        LabelHora.setText("horas");
+
+        LabelData.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        LabelData.setText("date");
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel3.setText("Hora:");
+        jLabel3.setText("Data");
 
-        LabelUsuario.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        LabelUsuario.setText("nome");
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         MenuCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_client_account_template_64002.png"))); // NOI18N
         MenuCadastro.setText("Cadastros");
@@ -206,33 +213,53 @@ public class Home extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Desktop)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(LabelTipoUser)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LabelUsuario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 526, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LabelHora, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addComponent(LabelUsuar)
+                        .addGap(0, 831, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jDesktopPane1)
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(LabelTipoUser)
+                                    .addComponent(jLabel3))
+                                .addGap(60, 60, 60)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(LblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(LabelHora, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(LabelData, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(68, 68, 68))))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(Desktop)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LabelTipoUser)
+                            .addComponent(LblUsuario))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(LabelHora))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LabelData)
+                            .addComponent(jLabel3))
+                        .addGap(0, 111, Short.MAX_VALUE))
+                    .addComponent(jDesktopPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LabelTipoUser)
-                    .addComponent(LabelData)
-                    .addComponent(LabelHora)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(LabelUsuario)))
+                .addComponent(LabelUsuar))
         );
 
         setSize(new java.awt.Dimension(869, 588));
@@ -250,7 +277,7 @@ public class Home extends javax.swing.JFrame {
         // as linhas abaixos vão abrir o form TelaUsuario dentro do desktop pane
        TelaUsuario usuario = new TelaUsuario();
        usuario.setVisible(true);
-       Desktop.add(usuario);
+       jDesktopPane1.add(usuario);
        
     }//GEN-LAST:event_MenuUsuarioActionPerformed
 
@@ -313,11 +340,11 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDesktopPane Desktop;
     private javax.swing.JLabel LabelData;
     private javax.swing.JLabel LabelHora;
     public static javax.swing.JLabel LabelTipoUser;
-    public static javax.swing.JLabel LabelUsuario;
+    public static javax.swing.JLabel LabelUsuar;
+    public static javax.swing.JLabel LblUsuario;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuAjuda;
     private javax.swing.JMenuItem MenuAjudaSobre;
@@ -327,6 +354,8 @@ public class Home extends javax.swing.JFrame {
     public static javax.swing.JMenu MenuRelatorio;
     private javax.swing.JMenuItem MenuRelatorioServico;
     public static javax.swing.JMenuItem MenuUsuario;
+    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem1;

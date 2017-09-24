@@ -27,7 +27,7 @@ public class Login extends javax.swing.JFrame {
             //que foi digitado nas caixas de textos 
             //o "?" é substituido pelo conteúdos das variáveis           
             pst = conexao.prepareStatement(slq);
-            pst.setString(1, TextFieldUsuario.getText());
+            pst.setString(1, TextFieldUsuario.getText().toUpperCase());
             pst.setString(2, PasswordField.getText());
 
             rs = pst.executeQuery();//a linha executa a query
@@ -36,23 +36,25 @@ public class Login extends javax.swing.JFrame {
             if (rs.next()) {//se existir usuario e senha correspondente
                 
                 String perfil = rs.getString(4);//a linha contém o conteúdo do campo perfil da tabela login
-
+                //System.out.println(perfil);
                 // a estrutura abaixo faz o tratamento do perfil do usuario
-                if (perfil.equals("Administrador")) {
+                if (perfil.equalsIgnoreCase("Administrador")) {
                     Home h = new Home();//estância da tela principal
                     h.setVisible(true);// chama a tela principal
                     Home.MenuRelatorio.setEnabled(true);
                     Home.MenuUsuario.setEnabled(true);
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
-                    Home.LabelUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
+                    Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
                     Home.LabelTipoUser.setForeground(Color.RED);
                     this.dispose();
+                    conexao.close();
                 } else {
                     Home h = new Home();//estância da tela principal
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
-                    Home.LabelUsuario.setText(rs.getString(1));//aqui seta o usuario logado conforme o banco de dados
-                    h.setVisible(true);// chama a tela principal      
+                    Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
+                    h.setVisible(true);// chama a tela principal  */    
                     this.dispose();//fecha a tela de login
+                    conexao.close();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário e/ou Senha Inválido(s)!");

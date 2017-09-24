@@ -8,12 +8,15 @@ package Visao;
 import java.sql.*;
 import dao.ModuloConexao;
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class TelaUsuario extends javax.swing.JInternalFrame {
@@ -33,7 +36,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         //aqui está chamando o método conector(); 
         //que chama a class ModuloConexao que está 
         //dentro do pacote dao
-        itensObrigatorios();
+        itensObrigatorios();//metodo para setar o label de vermelho
     }
 
     private void itensObrigatorios() {
@@ -68,6 +71,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     ComboBoxUserPerfil.setSelectedItem(rs.getString(4));// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(rs.getString(3));
                     FormattedTextFieldData_Nasc.setText(rs.getString(5));
+                    //LabelFoto.setText(rs.getBinaryStream(6));
 
                 } else {
                     JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");//se não houver usuário com o código pesquisado essa mensagem aparece para o usuário
@@ -82,7 +86,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
         }
     }
@@ -98,7 +102,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             //as linhas abaixo insere os valores que são digitados pelo usuário
             FileInputStream arquivoFoto;
             pst.setString(1, TextFieldUserCodigo.getText());
-            pst.setString(2, TextFieldUserNome.getText());
+            pst.setString(2, TextFieldUserNome.getText().toUpperCase());
             pst.setString(3, TextFieldUserSenha.getText());
             pst.setString(4, ComboBoxUserPerfil.getSelectedItem().toString());// a linha se refere especificamente ao combobox
             pst.setString(5, FormattedTextFieldData_Nasc.getText());
@@ -133,30 +137,33 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | FileNotFoundException | SQLException e) {
 
             JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
 
         }
-
     }
 
     //criando o metodo para alterar usuários
-    public void alterar() {
-        String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=? where id_usuario=?";
+    private void alterar() throws FileNotFoundException {
+        String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=?,foto=?,rota=? where id_usuario=?";
         try {
+            FileInputStream arquivoFoto;
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, TextFieldUserNome.getText());
-            pst.setString(2, TextFieldUserCelular.getText());
-            pst.setString(3, TextFieldResidencial.getText());
-            pst.setString(4, TextFieldUserEmail.getText());
-            pst.setString(5, ComboBoxUserPerfil.getSelectedItem().toString());
-            pst.setString(6, TextFieldUserSenha.getText());
-            pst.setString(7, FormattedTextFieldData_Nasc.getText());
-            pst.setString(8, TextFieldUserCodigo.getText());
+            pst.setString(1, TextFieldUserNome.getText().toUpperCase());
+            pst.setString(2, TextFieldUserSenha.getText());
+            pst.setString(3, ComboBoxUserPerfil.getSelectedItem().toString());
+            pst.setString(4, FormattedTextFieldData_Nasc.getText());
+            pst.setString(5, TextFieldUserCelular.getText());
+            pst.setString(6, TextFieldResidencial.getText());
+            pst.setString(7, TextFieldUserEmail.getText());
+            arquivoFoto = new FileInputStream(TextField_Path.getText());
+            pst.setBinaryStream(8, arquivoFoto);
+            pst.setString(9, TextField_Path.getText());
+            pst.setString(10, TextFieldUserCodigo.getText());
 
             //validaçao dos campos obrigatórios
-            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
+            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos!");//se os campos estiverem vazios retorna essa mensagem para o usuario
 
             } else {
@@ -179,8 +186,36 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     FormattedTextFieldData_Nasc.setText(null);
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
+        }
+    }
+
+    //metodo para remoção de usuários
+    private void Excluir() {
+
+        int confirmar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirmar == JOptionPane.YES_OPTION) {
+            String sql = "delete from usuario where id_usuario = ?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, TextFieldUserCodigo.getText());
+                int apagado = pst.executeUpdate();
+
+                if (apagado > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuário removido com sucesso!");
+                    TextFieldUserCodigo.setText(null);
+                    TextFieldUserNome.setText(null);
+                    TextFieldUserCelular.setText(null);
+                    TextFieldResidencial.setText(null);
+                    TextFieldUserEmail.setText(null);
+                    //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
+                    TextFieldUserSenha.setText(null);
+                    FormattedTextFieldData_Nasc.setText(null);
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
     }
 
@@ -227,12 +262,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         setBorder(null);
         setClosable(true);
         setIconifiable(true);
-        setMaximizable(true);
         setResizable(true);
         setTitle("Usuários");
-        setToolTipText("Adicionar Imagem");
+        setToolTipText("");
         setMinimumSize(new java.awt.Dimension(833, 473));
-        setPreferredSize(new java.awt.Dimension(833, 476));
+        setPreferredSize(new java.awt.Dimension(836, 475));
         setVisible(true);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -315,6 +349,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         ComboBoxUserPerfil.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Adminstrador" }));
 
+        FormattedTextFieldData_Nasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         FormattedTextFieldData_Nasc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         try {
@@ -352,7 +387,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         lblEmail.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         lblEmail.setText("*");
 
-        LabelFoto.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        LabelFoto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         Button_Add_Image.setText("Adicionar");
         Button_Add_Image.setToolTipText("Adicionar Imagem");
@@ -377,7 +412,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(51, Short.MAX_VALUE)
+                .addContainerGap(56, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(campo)
@@ -421,26 +456,23 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                                 .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(TextFieldUserNome, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel9)
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(226, 226, 226)
+                                .addComponent(Button_Add_Image))
+                            .addComponent(TextFieldResidencial)
+                            .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(8, 8, 8)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TextFieldResidencial)
-                                    .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(316, 316, 316)
-                                .addComponent(Button_Add_Image)))))
-                .addContainerGap(44, Short.MAX_VALUE))
+                        .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
@@ -467,24 +499,21 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                             .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblCodigo)
-                            .addComponent(lblPerfil)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblPerfil))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(TextFieldUserNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNome))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
+                        .addGap(26, 26, 26)
+                        .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Button_Add_Image))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
@@ -505,7 +534,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
 
-        setBounds(0, 0, 980, 627);
+        setBounds(0, 0, 1032, 638);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TextFieldUserEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldUserEmailActionPerformed
@@ -514,17 +543,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_TextFieldUserEmailActionPerformed
 
     private void ButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonApagarActionPerformed
-        // TODO add your handling code here:
-
+        // chamando o metodo excluir
+        Excluir();
     }//GEN-LAST:event_ButtonApagarActionPerformed
 
     private void ButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonConsultarActionPerformed
-        // chamando o método consultar
-        try {
-            consultar();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
+        // chamando o método consultar     
+        consultar();
+
     }//GEN-LAST:event_ButtonConsultarActionPerformed
 
     private void ButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAdicionarActionPerformed
@@ -534,22 +560,27 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ButtonAdicionarActionPerformed
 
     private void ButtonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAtualizarActionPerformed
-        // chama o metodo alterar
-        alterar();
+        try {
+            // chama o metodo alterar
+            alterar();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_ButtonAtualizarActionPerformed
 
     private void Button_Add_ImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_Add_ImageActionPerformed
         // TODO add your handling code here:
         try {
             JFileChooser escolher = new JFileChooser();
-            int janela = escolher.showOpenDialog(this);
+            int janela = escolher.showOpenDialog(null);
+            escolher.setDialogTitle("Carregar imagem do usuário");
             if (janela == JFileChooser.APPROVE_OPTION) {
                 File arquivo = escolher.getSelectedFile();
                 TextField_Path.setText(String.valueOf(arquivo));
                 Image foto = getToolkit().getImage(TextField_Path.getText());
                 LabelFoto.setIcon(new ImageIcon(foto));
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_Button_Add_ImageActionPerformed
