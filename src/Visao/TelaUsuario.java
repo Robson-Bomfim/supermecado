@@ -10,9 +10,13 @@ import dao.ModuloConexao;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -28,10 +32,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     //e serve para preparar e executar as instruções sql
     PreparedStatement pst = null;
     ResultSet rs = null;
-
+    public static String x;
     public TelaUsuario() {
         initComponents();
-
+         x="x";
         conexao = ModuloConexao.conector();
         //aqui está chamando o método conector(); 
         //que chama a class ModuloConexao que está 
@@ -48,31 +52,30 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         lblCodigo.setForeground(Color.RED);
     }
 
-    private void consultar() {//metodo para consultar usuário
+    private void consultar() throws IOException {//metodo para consultar usuário
+        Image img;
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         String sql = "select * from usuario where id_usuario = ?";//string sql que pesquisa a tabela e id do usuario
         try {
             pst = conexao.prepareStatement(sql);//linha que faz conexão passando a string sql como parametro para que a pesquisa seja feita dentro do banco
 
             if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-
                 JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
-
             } else {
-
                 pst.setString(1, TextFieldUserCodigo.getText());//linha que faz a pesquisa do usuario através do seu codigo
                 rs = pst.executeQuery();//linha que executa a conexão
-
                 if (rs.next()) {//se a conexão for verdadeira
                     //as linhas abaixo consulta os valores que são digitados pelo usuário
                     TextFieldUserNome.setText(rs.getString(2));
                     TextFieldUserCelular.setText(rs.getString(6));
                     TextFieldResidencial.setText(rs.getString(7));
                     TextFieldUserEmail.setText(rs.getString(8));
-                    ComboBoxUserPerfil.setSelectedItem(rs.getString(4));// a linha se refere especificamente ao combobox
+                    ComboBoxUserPerfil.setSelectedItem(rs.getString(4).toUpperCase());// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(rs.getString(3));
-                    FormattedTextFieldData_Nasc.setText(rs.getString(5));
-                    //LabelFoto.setText(rs.getBinaryStream(6));
-
+                    FormattedTextFieldData_Nasc.setText((rs.getString(5)));
+                    atualizaDataDoMysql();
+                    /*img = Toolkit.getDefaultToolkit().createImage(rs.getBytes(10));
+                    LabelFoto.setIcon(new javax.swing.ImageIcon(img));*/
                 } else {
                     JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");//se não houver usuário com o código pesquisado essa mensagem aparece para o usuário
 
@@ -84,89 +87,104 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
                     TextFieldUserSenha.setText(null);
                     FormattedTextFieldData_Nasc.setText(null);
+                    LabelFoto.setText(null);
+                    TextField_Path.setText(null);
                 }
             }
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
         }
     }
 
     private void adicionar() {//metodo para adicionar usuário
+        //String result = null;
 
-        //a string sql é executada dentro do banco de dados passando os valores que serão inseridos dentro do banco
-        String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email,foto,rota) values (?,?,?,?,?,?,?,?,?,?)";
+        if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios!");//se os campos estiverem vazios retorna essa mensagem para o usuario
 
-        try {
-            pst = conexao.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
+        } else {
 
-            //as linhas abaixo insere os valores que são digitados pelo usuário
-            FileInputStream arquivoFoto;
-            pst.setString(1, TextFieldUserCodigo.getText());
-            pst.setString(2, TextFieldUserNome.getText().toUpperCase());
-            pst.setString(3, TextFieldUserSenha.getText());
-            pst.setString(4, ComboBoxUserPerfil.getSelectedItem().toString());// a linha se refere especificamente ao combobox
-            pst.setString(5, FormattedTextFieldData_Nasc.getText());
-            pst.setString(6, TextFieldUserCelular.getText());
-            pst.setString(7, TextFieldResidencial.getText());
-            pst.setString(8, TextFieldUserEmail.getText());
-            arquivoFoto = new FileInputStream(TextField_Path.getText());
-            pst.setBinaryStream(9, arquivoFoto);
-            pst.setString(10, TextField_Path.getText());
-
-            //validaçao dos campos obrigatórios
-            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || ComboBoxUserPerfil.getSelectedItem().toString().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");//se os campos estiverem vazios retorna essa mensagem para o usuario
-
+            String sql1 = "select * from usuario where id_usuario = ?";
+            try {
+                pst = conexao.prepareStatement(sql1);//faz a conexão com o banco executando e passando a string sql como parametro
+                pst.setString(1, TextFieldUserCodigo.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (TextFieldUserCodigo.getText().equals(sql1)) {
+                JOptionPane.showMessageDialog(null, "Usuário já cadastrado!");
             } else {
 
-                //a linha abaixo atualiza a tabela usuario com os dados do formulario
-                //a estrutura abaixo é usado para confirmar os dados cadastrados na tabela
-                int adicionado = pst.executeUpdate();
-                //System.out.println(adicionado);//serve de apoio para o entendimento do codigo e essa linha retorna o valor da variavel adicionado
+                //a string sql é executada dentro do banco de dados passando os valores que serão inseridos dentro do banco
+                String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email) values (?,?,?,?,?,?,?,?)";
 
-                if (adicionado > 0) {
-                    JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!");//se tudo ocorreu comforme o esperado, essa mensagem é exibida para o usuário
-                    //as linhas abaixo "limpam" os campos
-                    TextFieldUserCodigo.setText(null);
-                    TextFieldUserNome.setText(null);
-                    TextFieldUserCelular.setText(null);
-                    TextFieldResidencial.setText(null);
-                    TextFieldUserEmail.setText(null);
-                    //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
-                    TextFieldUserSenha.setText(null);
-                    FormattedTextFieldData_Nasc.setText(null);
+                try {
+                    pst = conexao.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
+                    //validaçao dos campos obrigatórios
+                    //as linhas abaixo insere os valores que são digitados pelo usuário
+
+                    pst.setString(1, TextFieldUserCodigo.getText());
+                    pst.setString(2, TextFieldUserNome.getText().toUpperCase());
+                    pst.setString(3, TextFieldUserSenha.getText());
+                    pst.setString(4, ComboBoxUserPerfil.getSelectedItem().toString());// a linha se refere especificamente ao combobox
+                    pst.setString(5, dataParaMysql(FormattedTextFieldData_Nasc.getText()));
+                    pst.setString(6, TextFieldUserCelular.getText());
+                    pst.setString(7, TextFieldResidencial.getText());
+                    pst.setString(8, TextFieldUserEmail.getText());
+
+                    /*FileInputStream arquivoFoto; 
+                    arquivoFoto = new FileInputStream(TextField_Path.getText());
+                    pst.setBinaryStream(9, arquivoFoto);
+                    pst.setString(10, TextField_Path.getText());*/
+                    //a linha abaixo atualiza a tabela usuario com os dados do formulario
+                    //a estrutura abaixo é usado para confirmar os dados cadastrados na tabela
+                    int adicionado = pst.executeUpdate();
+                    //System.out.println(adicionado);//serve de apoio para o entendimento do codigo e essa linha retorna o valor da variavel adicionado
+
+                    if (adicionado > 0) {
+                        JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!");//se tudo ocorreu comforme o esperado, essa mensagem é exibida para o usuário
+                        //as linhas abaixo "limpam" os campos
+                        TextFieldUserCodigo.setText(null);
+                        TextFieldUserNome.setText(null);
+                        TextFieldUserCelular.setText(null);
+                        TextFieldResidencial.setText(null);
+                        TextFieldUserEmail.setText(null);
+                        //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
+                        TextFieldUserSenha.setText(null);
+                        FormattedTextFieldData_Nasc.setText(null);
+                        TextField_Path.setText(null);
+                    }
+                } catch (HeadlessException | SQLException e) {
+
+                    JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
                 }
             }
-        } catch (HeadlessException | FileNotFoundException | SQLException e) {
-
-            JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
-
         }
     }
 
     //criando o metodo para alterar usuários
     private void alterar() throws FileNotFoundException {
-        String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=?,foto=?,rota=? where id_usuario=?";
-        try {
-            FileInputStream arquivoFoto;
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, TextFieldUserNome.getText().toUpperCase());
-            pst.setString(2, TextFieldUserSenha.getText());
-            pst.setString(3, ComboBoxUserPerfil.getSelectedItem().toString());
-            pst.setString(4, FormattedTextFieldData_Nasc.getText());
-            pst.setString(5, TextFieldUserCelular.getText());
-            pst.setString(6, TextFieldResidencial.getText());
-            pst.setString(7, TextFieldUserEmail.getText());
-            arquivoFoto = new FileInputStream(TextField_Path.getText());
-            pst.setBinaryStream(8, arquivoFoto);
-            pst.setString(9, TextField_Path.getText());
-            pst.setString(10, TextFieldUserCodigo.getText());
+        //validaçao dos campos obrigatórios
+        if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios!");//se os campos estiverem vazios retorna essa mensagem para o usuario
 
-            //validaçao dos campos obrigatórios
-            if (TextFieldUserCodigo.getText().isEmpty() || TextFieldUserNome.getText().isEmpty() || TextFieldUserSenha.getText().isEmpty() || TextFieldUserEmail.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");//se os campos estiverem vazios retorna essa mensagem para o usuario
+        } else {
+            String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=? where id_usuario=?";
+            try {
 
-            } else {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, TextFieldUserNome.getText().toUpperCase());
+                pst.setString(2, TextFieldUserSenha.getText());
+                pst.setString(3, ComboBoxUserPerfil.getSelectedItem().toString());
+                pst.setString(4, dataParaMysql(FormattedTextFieldData_Nasc.getText()));
+                pst.setString(5, TextFieldUserCelular.getText());
+                pst.setString(6, TextFieldResidencial.getText());
+                pst.setString(7, TextFieldUserEmail.getText());
+                //FileInputStream arquivoFoto;
+                //arquivoFoto = new FileInputStream(TextField_Path.getText());
+                //pst.setBinaryStream(8, arquivoFoto);
+                //pst.setString(9, TextField_Path.getText());
+                pst.setString(8, TextFieldUserCodigo.getText());
 
                 //a linha abaixo atualiza a tabela usuario com os dados do formulario
                 //a estrutura abaixo é usado para confirmar os dados cadastrados na tabela
@@ -185,38 +203,63 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                     TextFieldUserSenha.setText(null);
                     FormattedTextFieldData_Nasc.setText(null);
                 }
+
+            } catch (HeadlessException | SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
             }
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
         }
     }
 
     //metodo para remoção de usuários
     private void Excluir() {
+        if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
+            JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
+        } else {
+            int confirmar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
+            if (confirmar == JOptionPane.YES_OPTION) {
+                String sql = "delete from usuario where id_usuario = ?";
+                try {
+                    pst = conexao.prepareStatement(sql);
+                    pst.setString(1, TextFieldUserCodigo.getText());
+                    int apagado = pst.executeUpdate();
 
-        int confirmar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
-        if (confirmar == JOptionPane.YES_OPTION) {
-            String sql = "delete from usuario where id_usuario = ?";
-            try {
-                pst = conexao.prepareStatement(sql);
-                pst.setString(1, TextFieldUserCodigo.getText());
-                int apagado = pst.executeUpdate();
-
-                if (apagado > 0) {
-                    JOptionPane.showMessageDialog(null, "Usuário removido com sucesso!");
-                    TextFieldUserCodigo.setText(null);
-                    TextFieldUserNome.setText(null);
-                    TextFieldUserCelular.setText(null);
-                    TextFieldResidencial.setText(null);
-                    TextFieldUserEmail.setText(null);
-                    //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
-                    TextFieldUserSenha.setText(null);
-                    FormattedTextFieldData_Nasc.setText(null);
+                    if (apagado > 0) {
+                        JOptionPane.showMessageDialog(null, "Usuário removido com sucesso!");
+                        TextFieldUserCodigo.setText(null);
+                        TextFieldUserNome.setText(null);
+                        TextFieldUserCelular.setText(null);
+                        TextFieldResidencial.setText(null);
+                        TextFieldUserEmail.setText(null);
+                        //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
+                        TextFieldUserSenha.setText(null);
+                        FormattedTextFieldData_Nasc.setText(null);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");//se não houver usuário com o código pesquisado essa mensagem aparece para o usuário
+                    }
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
                 }
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
+    }
+
+    public void atualizaDataDoMysql() {
+        //conversão de datas yyyy/mm/dd
+        String dia = FormattedTextFieldData_Nasc.getText().substring(8, 10);
+        String mes = FormattedTextFieldData_Nasc.getText().substring(5, 7);
+        String ano = FormattedTextFieldData_Nasc.getText().substring(0, 4);
+        String dataParaMysql = dia + "/" + mes + "/" + ano;
+        FormattedTextFieldData_Nasc.setText(dataParaMysql);
+        //System.out.println(dataParaMysql);
+    }
+
+    public String dataParaMysql(String data) {
+        //conversão de datas yyyy/mm/dd
+        String dia = FormattedTextFieldData_Nasc.getText().substring(0, 2);
+        String mes = FormattedTextFieldData_Nasc.getText().substring(3, 5);
+        String ano = FormattedTextFieldData_Nasc.getText().substring(6);
+        String dataParaMysql = ano + mes + dia;
+        return dataParaMysql;
     }
 
     /**
@@ -228,70 +271,63 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        TextFieldUserNome = new javax.swing.JTextField();
-        TextFieldUserEmail = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
         ButtonAdicionar = new javax.swing.JButton();
         ButtonConsultar = new javax.swing.JButton();
         ButtonAtualizar = new javax.swing.JButton();
         ButtonApagar = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        TextFieldUserCodigo = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        TextFieldUserSenha = new javax.swing.JTextField();
-        ComboBoxUserPerfil = new javax.swing.JComboBox<>();
-        FormattedTextFieldData_Nasc = new javax.swing.JFormattedTextField();
-        TextFieldUserCelular = new javax.swing.JFormattedTextField();
-        TextFieldResidencial = new javax.swing.JFormattedTextField();
-        jLabel10 = new javax.swing.JLabel();
-        campo = new javax.swing.JLabel();
-        lblSenha = new javax.swing.JLabel();
-        lblCodigo = new javax.swing.JLabel();
-        lblPerfil = new javax.swing.JLabel();
-        lblNome = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
         LabelFoto = new javax.swing.JLabel();
         Button_Add_Image = new javax.swing.JButton();
         TextField_Path = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        campo = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        ComboBoxUserPerfil = new javax.swing.JComboBox<>();
+        lblPerfil = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        TextFieldUserCodigo = new javax.swing.JTextField();
+        lblCodigo = new javax.swing.JLabel();
+        TextFieldUserNome = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        TextFieldUserSenha = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        TextFieldUserCelular = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
+        lblSenha = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        TextFieldUserEmail = new javax.swing.JTextField();
+        lblEmail = new javax.swing.JLabel();
+        TextFieldResidencial = new javax.swing.JFormattedTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        FormattedTextFieldData_Nasc = new javax.swing.JFormattedTextField();
 
         setBorder(null);
         setClosable(true);
         setIconifiable(true);
-        setResizable(true);
-        setTitle("Usuários");
+        setTitle("CADASTRO DE USUÁRIOS");
         setToolTipText("");
         setMinimumSize(new java.awt.Dimension(833, 473));
         setPreferredSize(new java.awt.Dimension(836, 475));
         setVisible(true);
-
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel1.setText("Perfil");
-
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel2.setText("Senha");
-
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel4.setText("Celular");
-
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel5.setText("Email");
-
-        TextFieldUserNome.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-
-        TextFieldUserEmail.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        TextFieldUserEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextFieldUserEmailActionPerformed(evt);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
             }
         });
-
-        jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel6.setText("Nome");
 
         ButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_add_48761.png"))); // NOI18N
         ButtonAdicionar.setToolTipText("Adicionar");
@@ -333,24 +369,54 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
+        LabelFoto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        Button_Add_Image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_load_upload_48774.png"))); // NOI18N
+        Button_Add_Image.setToolTipText("Adicionar Imagem");
+        Button_Add_Image.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Button_Add_Image.setPreferredSize(new java.awt.Dimension(40, 40));
+        Button_Add_Image.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_Add_ImageActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        campo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        campo.setText("*");
+
+        jLabel10.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel10.setText("Campos obrigatórios");
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel1.setText("Perfil");
+
+        ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USUÁRIO", "ADMINISTRADOR" }));
+
+        lblPerfil.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblPerfil.setText("*");
+
         jLabel7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel7.setText("Código:");
 
         TextFieldUserCodigo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel8.setText("Data de nascimento");
+        lblCodigo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblCodigo.setText("*");
 
-        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel9.setText("Residencial");
+        TextFieldUserNome.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel6.setText("Nome");
+
+        lblNome.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblNome.setText("*");
 
         TextFieldUserSenha.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        ComboBoxUserPerfil.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Adminstrador" }));
-
-        FormattedTextFieldData_Nasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        FormattedTextFieldData_Nasc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setText("Celular");
 
         try {
             TextFieldUserCelular.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)#####-####")));
@@ -359,6 +425,25 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
         TextFieldUserCelular.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel2.setText("Senha");
+
+        lblSenha.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblSenha.setText("*");
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel5.setText("Email");
+
+        TextFieldUserEmail.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        TextFieldUserEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldUserEmailActionPerformed(evt);
+            }
+        });
+
+        lblEmail.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblEmail.setText("*");
+
         try {
             TextFieldResidencial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)####-####")));
         } catch (java.text.ParseException ex) {
@@ -366,113 +451,153 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
         TextFieldResidencial.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel10.setText("Campos obrigatórios");
+        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel9.setText("Residencial");
 
-        campo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        campo.setText("*");
+        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel8.setText("Data de nascimento");
 
-        lblSenha.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        lblSenha.setText("*");
+        FormattedTextFieldData_Nasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        FormattedTextFieldData_Nasc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        lblCodigo.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        lblCodigo.setText("*");
-
-        lblPerfil.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        lblPerfil.setText("*");
-
-        lblNome.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        lblNome.setText("*");
-
-        lblEmail.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        lblEmail.setText("*");
-
-        LabelFoto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        Button_Add_Image.setText("Adicionar");
-        Button_Add_Image.setToolTipText("Adicionar Imagem");
-        Button_Add_Image.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Button_Add_ImageActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblPerfil)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(campo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblNome)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(TextFieldUserNome))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(lblSenha)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel2))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(lblEmail)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel9)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TextFieldResidencial)
+                            .addComponent(TextFieldUserEmail)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4)
+                                .addGap(10, 10, 10)
+                                .addComponent(TextFieldUserCelular, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(FormattedTextFieldData_Nasc)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(campo))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCodigo))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(lblPerfil)
+                        .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(TextFieldUserNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNome))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TextFieldUserCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSenha))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmail))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(ButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ButtonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(128, 128, 128)
+                        .addComponent(ButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                        .addComponent(ButtonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(177, 177, 177)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(campo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10))
+                        .addComponent(ButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(177, 177, 177)
+                        .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblSenha)
-                                    .addComponent(lblPerfil)
-                                    .addComponent(lblNome))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(jLabel2)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblEmail)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(102, 102, 102))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel4)))
-                                .addGap(10, 10, 10)
-                                .addComponent(TextFieldUserCelular))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblCodigo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(TextFieldUserNome, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(226, 226, 226)
-                                .addComponent(Button_Add_Image))
-                            .addComponent(TextFieldResidencial)
-                            .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(83, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(TextField_Path)
+                                .addGap(18, 18, 18)
+                                .addComponent(Button_Add_Image, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(LabelFoto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(97, 97, 97))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
@@ -482,59 +607,27 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ButtonAdicionar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ButtonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ButtonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ButtonApagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ButtonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(114, 114, 114)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(campo))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel7)
-                            .addComponent(TextFieldUserCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ComboBoxUserPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCodigo)
-                            .addComponent(lblPerfil))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(TextFieldUserNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNome))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
+                        .addComponent(LabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(TextField_Path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Button_Add_Image))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel9)
-                    .addComponent(TextFieldUserSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldUserCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSenha))
-                .addGap(45, 45, 45)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(TextFieldUserEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEmail)
-                    .addComponent(jLabel8)
-                    .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(44, 44, 44))
+                            .addComponent(Button_Add_Image, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
 
-        setBounds(0, 0, 1032, 638);
+        setBounds(0, 0, 1013, 638);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TextFieldUserEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldUserEmailActionPerformed
@@ -548,8 +641,12 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ButtonApagarActionPerformed
 
     private void ButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonConsultarActionPerformed
-        // chamando o método consultar     
-        consultar();
+        try {
+            // chamando o método consultar
+            consultar();
+        } catch (IOException ex) {
+            Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_ButtonConsultarActionPerformed
 
@@ -573,17 +670,23 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         try {
             JFileChooser escolher = new JFileChooser();
             int janela = escolher.showOpenDialog(null);
-            escolher.setDialogTitle("Carregar imagem do usuário");
             if (janela == JFileChooser.APPROVE_OPTION) {
+                escolher.setDialogTitle("Carregar imagem do usuário");
                 File arquivo = escolher.getSelectedFile();
                 TextField_Path.setText(String.valueOf(arquivo));
                 Image foto = getToolkit().getImage(TextField_Path.getText());
+                foto = foto.getScaledInstance(297, 280, Image.SCALE_DEFAULT);
                 LabelFoto.setIcon(new ImageIcon(foto));
             }
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_Button_Add_ImageActionPerformed
+
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        // TODO add your handling code here:
+        x=null;
+    }//GEN-LAST:event_formInternalFrameClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -612,6 +715,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblNome;

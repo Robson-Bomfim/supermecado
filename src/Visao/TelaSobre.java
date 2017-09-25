@@ -11,11 +11,10 @@ package Visao;
  */
 public class TelaSobre extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaSobre
-     */
+   public static String x;
     public TelaSobre() {
         initComponents();
+        x="x";
         setExtendedState(MAXIMIZED_BOTH);
     }
 

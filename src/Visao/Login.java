@@ -8,12 +8,14 @@ package Visao;
 import java.sql.*;
 import dao.ModuloConexao;
 import java.awt.Color;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
 
     Connection conexao = null;//usando a variavel conexão do dal
-    
+
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
     //e serve para preparar e executar as instruções sql
@@ -32,9 +34,8 @@ public class Login extends javax.swing.JFrame {
 
             rs = pst.executeQuery();//a linha executa a query
 
-            
             if (rs.next()) {//se existir usuario e senha correspondente
-                
+
                 String perfil = rs.getString(4);//a linha contém o conteúdo do campo perfil da tabela login
                 //System.out.println(perfil);
                 // a estrutura abaixo faz o tratamento do perfil do usuario
@@ -48,13 +49,15 @@ public class Login extends javax.swing.JFrame {
                     Home.LabelTipoUser.setForeground(Color.RED);
                     this.dispose();
                     conexao.close();
-                } else {
+                } else if (perfil.equalsIgnoreCase("Usuário")) {
                     Home h = new Home();//estância da tela principal
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
                     h.setVisible(true);// chama a tela principal  */    
                     this.dispose();//fecha a tela de login
                     conexao.close();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Perfil desconhecido!");
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário e/ou Senha Inválido(s)!");
@@ -76,6 +79,7 @@ public class Login extends javax.swing.JFrame {
             jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_close_36899.png")));
             jLabelStatusLegenda.setText("Desconectado");
         }
+        getRootPane().setDefaultButton(ButtonLogar);
     }
 
     /**
@@ -92,7 +96,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         TextFieldUsuario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButtonLogar = new javax.swing.JButton();
+        ButtonLogar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         PasswordField = new javax.swing.JPasswordField();
@@ -117,17 +121,23 @@ public class Login extends javax.swing.JFrame {
                 TextFieldUsuarioActionPerformed(evt);
             }
         });
+        TextFieldUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TextFieldUsuarioKeyPressed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel3.setText("Password");
 
-        jButtonLogar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButtonLogar.setText("Login");
-        jButtonLogar.setToolTipText("Clique para acessar");
-        jButtonLogar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButtonLogar.addActionListener(new java.awt.event.ActionListener() {
+        ButtonLogar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        ButtonLogar.setText("Login");
+        ButtonLogar.setToolTipText("Clique para acessar");
+        ButtonLogar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonLogar.setSelected(true);
+        ButtonLogar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLogarActionPerformed(evt);
+                ButtonLogarActionPerformed(evt);
             }
         });
 
@@ -140,6 +150,11 @@ public class Login extends javax.swing.JFrame {
         PasswordField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PasswordFieldActionPerformed(evt);
+            }
+        });
+        PasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PasswordFieldKeyPressed(evt);
             }
         });
 
@@ -170,7 +185,7 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonLogar))
+                        .addComponent(ButtonLogar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +216,7 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabelConexao)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabelStatusLegenda)
-                        .addComponent(jButtonLogar)))
+                        .addComponent(ButtonLogar)))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -231,18 +246,32 @@ public class Login extends javax.swing.JFrame {
 
     }//GEN-LAST:event_TextFieldUsuarioActionPerformed
 
-    private void jButtonLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogarActionPerformed
+    private void ButtonLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonLogarActionPerformed
         //a codição abaixo avisa o usuario que um ou mais campos estão sem preencher
         if (TextFieldUsuario.getText().isEmpty() || PasswordField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos antes de Logar!");
         } else {
             logar();// chamando o metodo logar
         }
-    }//GEN-LAST:event_jButtonLogarActionPerformed
+    }//GEN-LAST:event_ButtonLogarActionPerformed
 
     private void PasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasswordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PasswordFieldActionPerformed
+
+    private void TextFieldUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldUsuarioKeyPressed
+        // seleciona o campo senha
+        if (evt.getKeyCode() == evt.VK_ENTER) {
+            PasswordField.requestFocus();
+        }
+    }//GEN-LAST:event_TextFieldUsuarioKeyPressed
+
+    private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
+        // selecina foco no botão e captura a tecla enter
+        if (evt.getKeyCode() == evt.VK_ENTER) {
+            ButtonLogar.requestFocus();
+        }
+    }//GEN-LAST:event_PasswordFieldKeyPressed
 
     /**
      * @param args the command line arguments
@@ -281,9 +310,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonLogar;
     private javax.swing.JPasswordField PasswordField;
     private javax.swing.JTextField TextFieldUsuario;
-    private javax.swing.JButton jButtonLogar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
