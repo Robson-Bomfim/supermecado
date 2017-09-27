@@ -39,7 +39,7 @@ public class Login extends javax.swing.JFrame {
                 String perfil = rs.getString(4);//a linha contém o conteúdo do campo perfil da tabela login
                 //System.out.println(perfil);
                 // a estrutura abaixo faz o tratamento do perfil do usuario
-                if (perfil.equalsIgnoreCase("Administrador")) {
+                if (perfil.equalsIgnoreCase("Admin")) {
                     Home h = new Home();//estância da tela principal
                     h.setVisible(true);// chama a tela principal
                     Home.MenuRelatorio.setEnabled(true);
@@ -49,7 +49,7 @@ public class Login extends javax.swing.JFrame {
                     Home.LabelTipoUser.setForeground(Color.RED);
                     this.dispose();
                     conexao.close();
-                } else if (perfil.equalsIgnoreCase("Usuário")) {
+                } else if (perfil.equalsIgnoreCase("User")) {
                     Home h = new Home();//estância da tela principal
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados

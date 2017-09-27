@@ -9,13 +9,13 @@ package Visao;
  *
  * @author Dell
  */
-public class Produto extends javax.swing.JInternalFrame {
+public class Imprimir extends javax.swing.JInternalFrame {
 
-    public static String x;
+    public static String y;
 
-    public Produto() {
+    public Imprimir() {
         initComponents();
-        x = "x";
+        y = "y";
     }
 
     /**
@@ -29,7 +29,7 @@ public class Produto extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setIconifiable(true);
-        setTitle("CADASTRO DE PRODUTOS");
+        setTitle("IMPRIMIR RELATÓRIOS");
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -64,7 +64,7 @@ public class Produto extends javax.swing.JInternalFrame {
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         // TODO add your handling code here:
-        x = null;
+        y = null;
     }//GEN-LAST:event_formInternalFrameClosing
 
 

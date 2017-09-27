@@ -392,7 +392,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText("Perfil");
 
-        ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USUÁRIO", "ADMINISTRADOR" }));
+        ComboBoxUserPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USER", "ADMIN" }));
 
         lblPerfil.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         lblPerfil.setText("*");
@@ -627,7 +627,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonApagar, ButtonAtualizar, ButtonConsultar});
 
-        setBounds(0, 0, 1013, 638);
+        setBounds(0, 0, 1039, 638);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TextFieldUserEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldUserEmailActionPerformed

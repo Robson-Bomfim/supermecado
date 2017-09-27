@@ -52,15 +52,17 @@ public class Home extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
         MenuUsuario = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
         MenuRelatorio = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         MenuRelatorioServico = new javax.swing.JMenuItem();
         MenuAjuda = new javax.swing.JMenu();
-        MenuAjudaSobre = new javax.swing.JMenuItem();
+        telaSobre = new javax.swing.JMenuItem();
         MenuOpcao = new javax.swing.JMenu();
         MenuOpcaoSair = new javax.swing.JMenuItem();
+        TrocaDeUser = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -94,6 +96,7 @@ public class Home extends javax.swing.JFrame {
         jLabel3.setText("Data");
 
         jDesktopPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jDesktopPane1.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -116,6 +119,11 @@ public class Home extends javax.swing.JFrame {
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_clients_43573.png"))); // NOI18N
         jMenuItem2.setText("Cliente");
         jMenuItem2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         MenuCadastro.add(jMenuItem2);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
@@ -137,22 +145,10 @@ public class Home extends javax.swing.JFrame {
         });
         MenuCadastro.add(jMenuItem4);
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
-        jMenuItem5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_Sales-by-Payment-Method-rep_49616.png"))); // NOI18N
-        jMenuItem5.setText("Vendas");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
-            }
-        });
-        MenuCadastro.add(jMenuItem5);
-
         MenuUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
         MenuUsuario.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        MenuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_user-alt_285645 (1).png"))); // NOI18N
+        MenuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/user_285655.png"))); // NOI18N
         MenuUsuario.setText("Usuário");
-        MenuUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuUsuario.setEnabled(false);
         MenuUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +158,23 @@ public class Home extends javax.swing.JFrame {
         MenuCadastro.add(MenuUsuario);
 
         Menu.add(MenuCadastro);
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_Sales-by-Payment-Method-rep_49616.png"))); // NOI18N
+        jMenu1.setText("Vendas");
+        jMenu1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_note_1086667.png"))); // NOI18N
+        jMenuItem6.setText("Formulário");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        Menu.add(jMenu1);
 
         MenuRelatorio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_report_user_36375.png"))); // NOI18N
         MenuRelatorio.setText("Relatórios");
@@ -174,6 +187,11 @@ public class Home extends javax.swing.JFrame {
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-37_910741.png"))); // NOI18N
         jMenuItem3.setText("Imprimir");
         jMenuItem3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         MenuRelatorio.add(jMenuItem3);
 
         MenuRelatorioServico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
@@ -181,6 +199,11 @@ public class Home extends javax.swing.JFrame {
         MenuRelatorioServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-14_463013.png"))); // NOI18N
         MenuRelatorioServico.setText("Serviços");
         MenuRelatorioServico.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuRelatorioServico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuRelatorioServicoActionPerformed(evt);
+            }
+        });
         MenuRelatorio.add(MenuRelatorioServico);
 
         Menu.add(MenuRelatorio);
@@ -190,17 +213,16 @@ public class Home extends javax.swing.JFrame {
         MenuAjuda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuAjuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        MenuAjudaSobre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.ALT_MASK));
-        MenuAjudaSobre.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        MenuAjudaSobre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-18_463010.png"))); // NOI18N
-        MenuAjudaSobre.setText("Sobre");
-        MenuAjudaSobre.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        MenuAjudaSobre.addActionListener(new java.awt.event.ActionListener() {
+        telaSobre.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        telaSobre.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        telaSobre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-18_463010.png"))); // NOI18N
+        telaSobre.setText("Sobre");
+        telaSobre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuAjudaSobreActionPerformed(evt);
+                telaSobreActionPerformed(evt);
             }
         });
-        MenuAjuda.add(MenuAjudaSobre);
+        MenuAjuda.add(telaSobre);
 
         Menu.add(MenuAjuda);
 
@@ -221,6 +243,17 @@ public class Home extends javax.swing.JFrame {
         });
         MenuOpcao.add(MenuOpcaoSair);
 
+        TrocaDeUser.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.ALT_MASK));
+        TrocaDeUser.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TrocaDeUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_support_477135.png"))); // NOI18N
+        TrocaDeUser.setText("Trocar usuário");
+        TrocaDeUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TrocaDeUserActionPerformed(evt);
+            }
+        });
+        MenuOpcao.add(TrocaDeUser);
+
         Menu.add(MenuOpcao);
 
         setJMenuBar(Menu);
@@ -233,9 +266,9 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addGap(0, 12, Short.MAX_VALUE)
                         .addComponent(LabelUsuar)
-                        .addGap(0, 831, Short.MAX_VALUE))
+                        .addGap(0, 840, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jDesktopPane1)
                         .addGap(10, 10, 10)
@@ -278,41 +311,9 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(LabelUsuar))
         );
 
-        setSize(new java.awt.Dimension(869, 588));
+        setSize(new java.awt.Dimension(888, 588));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void MenuAjudaSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuAjudaSobreActionPerformed
-        // chamando a tela sobre
-        String x = TelaSobre.x;
-        try {
-            if (x == null) {
-                TelaSobre t = new TelaSobre();
-                t.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "A janela sobre já está aberta!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_MenuAjudaSobreActionPerformed
-
-    private void MenuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuUsuarioActionPerformed
-        // as linhas abaixos vão abrir o form TelaUsuario dentro do desktop pane
-        String x = TelaUsuario.x;
-        try {
-            if (x == null) {
-                TelaUsuario usuario = new TelaUsuario();
-                usuario.setVisible(true);
-                jDesktopPane1.add(usuario);
-                jDesktopPane1.moveToFront(usuario);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de usuários já está aberta!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_MenuUsuarioActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // as linhas abaixo substituem as labels data pela data do sistema
@@ -352,21 +353,115 @@ public class Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    private void MenuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuUsuarioActionPerformed
         // TODO add your handling code here:
-        String x = Venda.x;
+        String x = TelaUsuario.x;
         try {
             if (x == null) {
-                Venda v = new Venda();
-                v.setVisible(true);
-                jDesktopPane1.add(v);
+                TelaUsuario t = new TelaUsuario();
+                t.setVisible(true);
+                jDesktopPane1.add(t);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de vendas já está aberta!");
+                JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de usuários já está aberta!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
+    }//GEN-LAST:event_MenuUsuarioActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        String y = Venda.y;
+        try {
+            if (y == null) {
+                Venda v = new Venda();
+                v.setVisible(true);
+                jDesktopPane1.add(v);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "A janela formulário de vendas já está aberta!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        String y = Cliente.y;
+        try {
+            if (y == null) {
+                Cliente c = new Cliente();
+                c.setVisible(true);
+                jDesktopPane1.add(c);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de clientes já está aberta!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        String y = Imprimir.y;
+        try {
+            if (y == null) {
+                Imprimir i = new Imprimir();
+                i.setVisible(true);
+                jDesktopPane1.add(i);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "A janela de impressão já está aberta!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void MenuRelatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRelatorioServicoActionPerformed
+        // TODO add your handling code here:
+        String y = Servico.y;
+        try {
+            if (y == null) {
+                Servico s = new Servico();
+                s.setVisible(true);
+                jDesktopPane1.add(s);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "A janela de serviço já está aberta!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_MenuRelatorioServicoActionPerformed
+
+    private void telaSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telaSobreActionPerformed
+        // TODO add your handling code here:
+        String y = Sobre.y;
+
+        if (y == null) {
+            Sobre t = new Sobre();
+            t.setVisible(true);
+            jDesktopPane1.add(t);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "A janela sobre já está aberta!");
+        }
+
+    }//GEN-LAST:event_telaSobreActionPerformed
+
+    private void TrocaDeUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TrocaDeUserActionPerformed
+        // TODO add your handling code here:
+        int trocar = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja trocar de usuário?","Atenção",JOptionPane.YES_NO_OPTION);
+        try {
+            if (trocar == JOptionPane.YES_OPTION) {
+                Login l = new Login();
+                l.setVisible(true);
+                dispose();
+            } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_TrocaDeUserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -412,22 +507,24 @@ public class Home extends javax.swing.JFrame {
     public static javax.swing.JLabel LblUsuario;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuAjuda;
-    private javax.swing.JMenuItem MenuAjudaSobre;
     private javax.swing.JMenu MenuCadastro;
     private javax.swing.JMenu MenuOpcao;
     private javax.swing.JMenuItem MenuOpcaoSair;
     public static javax.swing.JMenu MenuRelatorio;
     private javax.swing.JMenuItem MenuRelatorioServico;
     public static javax.swing.JMenuItem MenuUsuario;
+    private javax.swing.JMenuItem TrocaDeUser;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem telaSobre;
     // End of variables declaration//GEN-END:variables
 
     class hora implements ActionListener {
