@@ -15,32 +15,40 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 
 public class TelaUsuario extends javax.swing.JInternalFrame {
 
-    Connection conexao = null;//usando a variavel conexão do dal
+    ModuloConexao conexao = new ModuloConexao();//usando a variavel conexão do dal
 
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
     //e serve para preparar e executar as instruções sql
-    PreparedStatement pst = null;
-    ResultSet rs = null;
+    PreparedStatement pst;
+    ResultSet rs;
     public static String x;
+
     public TelaUsuario() {
         initComponents();
-         x="x";
-        conexao = ModuloConexao.conector();
+        x = "x";
+        conexao.conector();
         //aqui está chamando o método conector(); 
         //que chama a class ModuloConexao que está 
         //dentro do pacote dao
         itensObrigatorios();//metodo para setar o label de vermelho
+        try {
+            MaskFormatter form = new MaskFormatter("##/##/####");
+            form.install(FormattedTextFieldData_Nasc);
+            //TextFieldDataVenda.setFormatterFactory(new DefaultFormatterFactory(form));
+        } catch (ParseException e) {
+            System.out.println(e);
+        }
     }
 
     private void itensObrigatorios() {
@@ -54,10 +62,9 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     private void consultar() throws IOException {//metodo para consultar usuário
         Image img;
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         String sql = "select * from usuario where id_usuario = ?";//string sql que pesquisa a tabela e id do usuario
         try {
-            pst = conexao.prepareStatement(sql);//linha que faz conexão passando a string sql como parametro para que a pesquisa seja feita dentro do banco
+            pst = conexao.connection.prepareStatement(sql);//linha que faz conexão passando a string sql como parametro para que a pesquisa seja feita dentro do banco
 
             if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
                 JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
@@ -106,7 +113,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
             String sql1 = "select * from usuario where id_usuario = ?";
             try {
-                pst = conexao.prepareStatement(sql1);//faz a conexão com o banco executando e passando a string sql como parametro
+                pst = conexao.connection.prepareStatement(sql1);//faz a conexão com o banco executando e passando a string sql como parametro
                 pst.setString(1, TextFieldUserCodigo.getText());
             } catch (SQLException ex) {
                 Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,7 +126,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email) values (?,?,?,?,?,?,?,?)";
 
                 try {
-                    pst = conexao.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
+                    pst = conexao.connection.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
                     //validaçao dos campos obrigatórios
                     //as linhas abaixo insere os valores que são digitados pelo usuário
 
@@ -172,7 +179,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=? where id_usuario=?";
             try {
 
-                pst = conexao.prepareStatement(sql);
+                pst = conexao.connection.prepareStatement(sql);
                 pst.setString(1, TextFieldUserNome.getText().toUpperCase());
                 pst.setString(2, TextFieldUserSenha.getText());
                 pst.setString(3, ComboBoxUserPerfil.getSelectedItem().toString());
@@ -219,7 +226,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             if (confirmar == JOptionPane.YES_OPTION) {
                 String sql = "delete from usuario where id_usuario = ?";
                 try {
-                    pst = conexao.prepareStatement(sql);
+                    pst = conexao.connection.prepareStatement(sql);
                     pst.setString(1, TextFieldUserCodigo.getText());
                     int apagado = pst.executeUpdate();
 
@@ -457,7 +464,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel8.setText("Data de nascimento");
 
-        FormattedTextFieldData_Nasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         FormattedTextFieldData_Nasc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -520,7 +526,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                                 .addComponent(TextFieldUserCelular, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(FormattedTextFieldData_Nasc)))
                 .addContainerGap())
         );
@@ -562,11 +568,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(TextFieldResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(FormattedTextFieldData_Nasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -685,7 +691,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
         // TODO add your handling code here:
-        x=null;
+        x = null;
     }//GEN-LAST:event_formInternalFrameClosing
 
 

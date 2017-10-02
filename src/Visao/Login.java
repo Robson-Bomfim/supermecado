@@ -8,19 +8,18 @@ package Visao;
 import java.sql.*;
 import dao.ModuloConexao;
 import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
 
-    Connection conexao = null;//usando a variavel conexão do dal
+    ModuloConexao conexao = new ModuloConexao();
+    //Connection conexao = null;//usando a variavel conexão do dal
 
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
     //e serve para preparar e executar as instruções sql
-    PreparedStatement pst = null;
-    ResultSet rs = null;
+    PreparedStatement pst;
+    ResultSet rs;
 
     public void logar() {
         String slq = "select * from usuario where nome_login = ? and senha = ?";
@@ -28,7 +27,7 @@ public class Login extends javax.swing.JFrame {
             //as linhas abaixo preparam a consulta ao banco em função do 
             //que foi digitado nas caixas de textos 
             //o "?" é substituido pelo conteúdos das variáveis           
-            pst = conexao.prepareStatement(slq);
+            pst = conexao.connection.prepareStatement(slq);
             pst.setString(1, TextFieldUsuario.getText().toUpperCase());
             pst.setString(2, PasswordField.getText());
 
@@ -48,14 +47,14 @@ public class Login extends javax.swing.JFrame {
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
                     Home.LabelTipoUser.setForeground(Color.RED);
                     this.dispose();
-                    conexao.close();
+                    conexao.desconecta();
                 } else if (perfil.equalsIgnoreCase("User")) {
                     Home h = new Home();//estância da tela principal
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
                     h.setVisible(true);// chama a tela principal  */    
                     this.dispose();//fecha a tela de login
-                    conexao.close();
+                    conexao.desconecta();
                 } else {
                     JOptionPane.showMessageDialog(null, "Perfil desconhecido!");
                 }
@@ -69,7 +68,7 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-        conexao = ModuloConexao.conector();
+        conexao.conector();
         // a linha abaixo serve de apoio ao status de conexão
         //System.out.println(conexao);
         if (conexao != null) {
@@ -301,11 +300,8 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
     }
 

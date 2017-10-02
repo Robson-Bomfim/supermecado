@@ -5,17 +5,30 @@
  */
 package Visao;
 
-/**
- *
- * @author Dell
- */
+import dao.ModuloConexao;
+import java.text.ParseException;
+import javax.swing.text.MaskFormatter;
+
 public class Venda extends javax.swing.JInternalFrame {
 
+    ModuloConexao conexao = new ModuloConexao();
     public static String y;
 
     public Venda() {
         initComponents();
+
+        try {
+            MaskFormatter form = new MaskFormatter("##/##/####");
+            form.install(FormattedTextFieldDataVenda);
+            //TextFieldDataVenda.setFormatterFactory(new DefaultFormatterFactory(form));
+        } catch (ParseException e) {
+            System.out.println(e);
+        }
         y = "y";
+        conexao.conector();
+    }
+
+    public void preencherTabela() {
     }
 
     /**
@@ -29,29 +42,31 @@ public class Venda extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        TextFieldNomeCiente = new javax.swing.JTextField();
+        ButtonCliente = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        TextFieldProduto = new javax.swing.JTextField();
+        ButtonProduto = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        TextFieldQuantidade = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        TextFieldValorItem = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablePesquisa = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        TableItensVenda = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        TextFieldValorTotal = new javax.swing.JTextField();
+        ButtonFinalizarVenda = new javax.swing.JButton();
+        ButtonCancelarVenda = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        FormattedTextFieldDataVenda = new javax.swing.JFormattedTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -81,47 +96,49 @@ public class Venda extends javax.swing.JInternalFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel1.setText("Nome do cliente:");
 
-        jTextField1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldNomeCiente.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(153, 153, 153));
-        jButton1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-01_463023.png"))); // NOI18N
-        jButton1.setToolTipText("Buscar");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setPreferredSize(new java.awt.Dimension(40, 40));
-        jButton1.setSelected(true);
+        ButtonCliente.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        ButtonCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-01_463023.png"))); // NOI18N
+        ButtonCliente.setToolTipText("Buscar");
+        ButtonCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonCliente.setPreferredSize(new java.awt.Dimension(40, 40));
+        ButtonCliente.setSelected(true);
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel2.setText("Produto:");
 
-        jTextField2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldProduto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldProdutoActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(153, 153, 153));
-        jButton2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-01_463023.png"))); // NOI18N
-        jButton2.setToolTipText("Buscar");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setPreferredSize(new java.awt.Dimension(40, 40));
-        jButton2.setSelected(true);
+        ButtonProduto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        ButtonProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-01_463023.png"))); // NOI18N
+        ButtonProduto.setToolTipText("Buscar");
+        ButtonProduto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonProduto.setPreferredSize(new java.awt.Dimension(40, 40));
+        ButtonProduto.setSelected(true);
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel3.setText("Quantidade:");
 
-        jTextField3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldQuantidade.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel4.setText("Valor por item:");
 
-        jTextField4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldValorItem.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
-        jButton3.setBackground(new java.awt.Color(153, 153, 153));
         jButton3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-10_463016.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/shopcartadd.png"))); // NOI18N
         jButton3.setToolTipText("Adicionar");
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton3.setPreferredSize(new java.awt.Dimension(40, 40));
@@ -130,13 +147,11 @@ public class Venda extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel5.setText("Data:");
 
-        jTextField5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-
         jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel6.setText("Tabela de pesquisa:");
 
-        jTable1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablePesquisa.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TablePesquisa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -147,10 +162,10 @@ public class Venda extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablePesquisa);
 
-        jTable2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        TableItensVenda.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TableItensVenda.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -161,7 +176,7 @@ public class Venda extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(TableItensVenda);
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel7.setText("Itens da venda:");
@@ -171,15 +186,23 @@ public class Venda extends javax.swing.JInternalFrame {
         jLabel9.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel9.setText("Valor total");
 
-        jTextField6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TextFieldValorTotal.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
-        jButton4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jButton4.setText("Finalizar venda");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonFinalizarVenda.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        ButtonFinalizarVenda.setText("Finalizar venda");
+        ButtonFinalizarVenda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jButton5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jButton5.setText("Cancelar venda");
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonCancelarVenda.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        ButtonCancelarVenda.setText("Cancelar venda");
+        ButtonCancelarVenda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/shopcartapply.png"))); // NOI18N
+        jLabel10.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/shopcartexclude.png"))); // NOI18N
+        jLabel11.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        FormattedTextFieldDataVenda.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -198,7 +221,7 @@ public class Venda extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel7)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                                 .addContainerGap())))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,43 +230,48 @@ public class Venda extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jTextField4))
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(TextFieldValorItem))
+                                        .addComponent(TextFieldNomeCiente, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addGap(41, 41, 41)
                                         .addComponent(jLabel4)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ButtonCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))))
+                                    .addComponent(TextFieldProduto, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(FormattedTextFieldDataVenda))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ButtonProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(148, 148, 148)
-                .addComponent(jButton4)
-                .addGap(149, 149, 149)
+                .addComponent(ButtonFinalizarVenda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(140, 140, 140)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(149, 149, 149)
-                        .addComponent(jButton5)))
+                    .addComponent(TextFieldValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(140, 140, 140)
+                .addComponent(ButtonCancelarVenda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2, jButton3});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonCliente, ButtonProduto, jButton3});
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel10, jLabel11});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,16 +280,16 @@ public class Venda extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ButtonCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(TextFieldNomeCiente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(TextFieldProduto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ButtonProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -269,39 +297,38 @@ public class Venda extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(4, 4, 4))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(4, 4, 4))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(TextFieldQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(TextFieldValorItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(FormattedTextFieldDataVenda)))
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(92, 92, 92)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5)))
-                    .addComponent(jButton4))
-                .addContainerGap(38, Short.MAX_VALUE))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(62, 62, 62)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(TextFieldValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ButtonCancelarVenda)))
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ButtonFinalizarVenda))
+                .addGap(36, 36, 36))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel10, jLabel11});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -328,14 +355,28 @@ public class Venda extends javax.swing.JInternalFrame {
         y = null;
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void TextFieldProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldProdutoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldProdutoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton ButtonCancelarVenda;
+    private javax.swing.JButton ButtonCliente;
+    private javax.swing.JButton ButtonFinalizarVenda;
+    private javax.swing.JButton ButtonProduto;
+    private javax.swing.JFormattedTextField FormattedTextFieldDataVenda;
+    private javax.swing.JTable TableItensVenda;
+    private javax.swing.JTable TablePesquisa;
+    private javax.swing.JTextField TextFieldNomeCiente;
+    private javax.swing.JTextField TextFieldProduto;
+    private javax.swing.JTextField TextFieldQuantidade;
+    private javax.swing.JTextField TextFieldValorItem;
+    private javax.swing.JTextField TextFieldValorTotal;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -347,13 +388,5 @@ public class Venda extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }

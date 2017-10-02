@@ -50,18 +50,23 @@ public class Home extends javax.swing.JFrame {
         Menu = new javax.swing.JMenuBar();
         MenuCadastro = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         MenuUsuario = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         MenuRelatorio = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         MenuRelatorioServico = new javax.swing.JMenuItem();
         MenuAjuda = new javax.swing.JMenu();
         telaSobre = new javax.swing.JMenuItem();
         MenuOpcao = new javax.swing.JMenu();
         MenuOpcaoSair = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
         TrocaDeUser = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -125,13 +130,20 @@ public class Home extends javax.swing.JFrame {
             }
         });
         MenuCadastro.add(jMenuItem2);
+        MenuCadastro.add(jSeparator1);
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_suppliers_54265.png"))); // NOI18N
         jMenuItem1.setText("Fornecedor");
         jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         MenuCadastro.add(jMenuItem1);
+        MenuCadastro.add(jSeparator2);
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -144,6 +156,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         MenuCadastro.add(jMenuItem4);
+        MenuCadastro.add(jSeparator3);
 
         MenuUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
         MenuUsuario.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -193,6 +206,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         MenuRelatorio.add(jMenuItem3);
+        MenuRelatorio.add(jSeparator4);
 
         MenuRelatorioServico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
         MenuRelatorioServico.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -233,8 +247,8 @@ public class Home extends javax.swing.JFrame {
 
         MenuOpcaoSair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         MenuOpcaoSair.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        MenuOpcaoSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-09_463017.png"))); // NOI18N
-        MenuOpcaoSair.setText("Sair");
+        MenuOpcaoSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_support_477135.png"))); // NOI18N
+        MenuOpcaoSair.setText("Trocar usuário");
         MenuOpcaoSair.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuOpcaoSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,11 +256,12 @@ public class Home extends javax.swing.JFrame {
             }
         });
         MenuOpcao.add(MenuOpcaoSair);
+        MenuOpcao.add(jSeparator5);
 
         TrocaDeUser.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.ALT_MASK));
         TrocaDeUser.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        TrocaDeUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_support_477135.png"))); // NOI18N
-        TrocaDeUser.setText("Trocar usuário");
+        TrocaDeUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-09_463017.png"))); // NOI18N
+        TrocaDeUser.setText("Sair");
         TrocaDeUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TrocaDeUserActionPerformed(evt);
@@ -329,11 +344,15 @@ public class Home extends javax.swing.JFrame {
 
     private void MenuOpcaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpcaoSairActionPerformed
         // exibe uma caixa de diálogo
-        int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção", JOptionPane.YES_NO_OPTION);
-        // a condição abaixo valida a escolha do usuário
-        if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
-        {
-            System.exit(0);//sai do sistem
+        int trocar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja trocar de usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
+        try {
+            if (trocar == JOptionPane.YES_OPTION) {
+                Login l = new Login();
+                l.setVisible(true);
+                dispose();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_MenuOpcaoSairActionPerformed
 
@@ -450,18 +469,25 @@ public class Home extends javax.swing.JFrame {
 
     private void TrocaDeUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TrocaDeUserActionPerformed
         // TODO add your handling code here:
-        int trocar = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja trocar de usuário?","Atenção",JOptionPane.YES_NO_OPTION);
-        try {
-            if (trocar == JOptionPane.YES_OPTION) {
-                Login l = new Login();
-                l.setVisible(true);
-                dispose();
-            } 
-        } catch (Exception e) {
-            e.printStackTrace();
+        int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção", JOptionPane.YES_NO_OPTION);
+        // a condição abaixo valida a escolha do usuário
+        if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
+        {
+            System.exit(0);//sai do sistem
         }
-
     }//GEN-LAST:event_TrocaDeUserActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        String y = Fornecedor.y;
+        if (y == null) {
+            Fornecedor f = new Fornecedor();
+            f.setVisible(true);
+            jDesktopPane1.add(f);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de fornecedores já está aberta!");
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -524,6 +550,11 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JMenuItem telaSobre;
     // End of variables declaration//GEN-END:variables
 

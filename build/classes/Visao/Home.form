@@ -38,6 +38,8 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -54,6 +56,11 @@
                   <Color id="Cursor em Forma de M&#xe3;o"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
               <Properties>
@@ -74,6 +81,8 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem4ActionPerformed"/>
               </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MenuUsuario">
               <Properties>
@@ -166,6 +175,8 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MenuRelatorioServico">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -244,9 +255,9 @@
                   <Font name="Arial" size="12" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Icones/if_free-09_463017.png"/>
+                  <Image iconType="3" name="/Icones/if_support_477135.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Sair"/>
+                <Property name="text" type="java.lang.String" value="Trocar usu&#xe1;rio"/>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                   <Color id="Cursor em Forma de M&#xe3;o"/>
                 </Property>
@@ -254,6 +265,8 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuOpcaoSairActionPerformed"/>
               </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator5">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="TrocaDeUser">
               <Properties>
@@ -264,9 +277,9 @@
                   <Font name="Arial" size="12" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Icones/if_support_477135.png"/>
+                  <Image iconType="3" name="/Icones/if_free-09_463017.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Trocar usu&#xe1;rio"/>
+                <Property name="text" type="java.lang.String" value="Sair"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TrocaDeUserActionPerformed"/>
