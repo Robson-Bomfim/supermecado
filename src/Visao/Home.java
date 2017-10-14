@@ -407,10 +407,10 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        String y = Cliente.y;
+        String y = Clientes.y;
         try {
             if (y == null) {
-                Cliente c = new Cliente();
+                Clientes c = new Clientes();
                 c.setVisible(true);
                 jDesktopPane1.add(c);
             } else {

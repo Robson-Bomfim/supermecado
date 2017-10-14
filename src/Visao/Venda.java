@@ -5,18 +5,19 @@
  */
 package Visao;
 
-import dao.ModuloConexao;
+import dao.Conectar;
+import java.sql.Connection;
 import java.text.ParseException;
 import javax.swing.text.MaskFormatter;
 
 public class Venda extends javax.swing.JInternalFrame {
 
-    ModuloConexao conexao = new ModuloConexao();
+    Connection conexao = null;
     public static String y;
 
     public Venda() {
         initComponents();
-
+        this.conexao =  new Conectar().openConnection();
         try {
             MaskFormatter form = new MaskFormatter("##/##/####");
             form.install(FormattedTextFieldDataVenda);
@@ -25,7 +26,6 @@ public class Venda extends javax.swing.JInternalFrame {
             System.out.println(e);
         }
         y = "y";
-        conexao.conector();
     }
 
     public void preencherTabela() {

@@ -2,32 +2,34 @@ package Controle;
 
 import Modelo.ModeloFornecedor;
 import Modelo.ModeloProduto;
-import dao.ModuloConexao;
+import dao.Conectar;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import net.proteanit.sql.DbUtils;
 
 public class ControleProduto {
 
-    ModuloConexao conexao = new ModuloConexao();
-    ModuloConexao conexaoFornecedor = new ModuloConexao();
-    PreparedStatement pst;
-    ResultSet rs;
+    Connection conexao = null;
+    Connection conexaoFornecedor = null;
+    Connection conexaoRead = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
     ModeloProduto modeloProduto = new ModeloProduto();
     ModeloFornecedor modeloFornecedor = new ModeloFornecedor();
     int codigoFornecedor;
     String nomefornecedor;
 
     public void adionarProduto(ModeloProduto modelo) throws SQLException {
-        conexao.conector();
+        this.conexao = new Conectar().openConnection();
         try {
-            buscarCodigoDoProduto(modelo.getFornecedor().getNome());
+            buscarCodigoDoFornecedor(modelo);
             String sql = "insert into produto (nome_produto, quantidade, valor_custo, valor_venda, id_fornecedor)"
                     + "values (?,?,?,?,?)";
-            pst = conexao.connection.prepareStatement(sql);
+            pst = conexao.prepareStatement(sql);
             pst.setString(1, modelo.getNomeProduto());
             pst.setInt(2, modelo.getQuantidadeProduto());
             pst.setFloat(3, modelo.getPrecoCompra());
@@ -36,19 +38,19 @@ public class ControleProduto {
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
-                JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto "+modelo.getNomeProduto().toLowerCase() +" cadastrado com sucesso!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
         }
-        conexao.desconecta();
+        conexao.close();
     }
 
-    private void buscarCodigoDoProduto(String nome) {
-        conexao.conector();
-        String sql = "select * from fornecedor where nome_fornecedor = '" + nome + "'";
+    private void buscarCodigoDoFornecedor(ModeloProduto modelo) throws SQLException {
+        this.conexao = new Conectar().openConnection();
+        String sql = "select * from fornecedor where nome_fornecedor = '" + modelo.getFornecedor().getNome() + "'";
         try {
-            pst = conexao.connection.prepareStatement(sql);
+            pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
             if (rs.next()) {
                 codigoFornecedor = rs.getInt("id_fornecedor");
@@ -60,46 +62,46 @@ public class ControleProduto {
 
     public ModeloProduto buscarProduto(ModeloProduto modelo) throws SQLException {
 
-        conexao.conector();
-        conexao.SQL("select * from produto where nome_produto like '%" + modelo.getPesquisa() + "%'");
-        conexao.rs.first();
+        this.conexao = new Conectar().openConnection();
+        String sql = "select * from produto where nome_produto like '%" + modelo.getPesquisa() + "%'";
+        pst = conexao.prepareStatement(sql);
+        rs = pst.executeQuery();
         try {
-            if (conexao.rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(null, "Produto não cadastrado!");
-            }
-            buscarNomeFornecedor(conexao.rs.getInt("id_fornecedor"));
-            modeloProduto.setIdProduto(conexao.rs.getInt("id_produto"));
-            modeloProduto.setNomeProduto(conexao.rs.getString("nome_produto"));
-            modeloProduto.setQuantidadeProduto(conexao.rs.getInt("quantidade"));
-            modeloProduto.setPrecoCompra(conexao.rs.getFloat("valor_custo"));
-            modeloProduto.setPrecoVenda(conexao.rs.getFloat("valor_venda"));
+            modeloProduto.setIdProduto(rs.getInt("id_produto"));
+            modeloProduto.setNomeProduto(rs.getString("nome_produto"));
+            modeloProduto.setQuantidadeProduto(rs.getInt("quantidade"));
+            modeloProduto.setPrecoCompra(rs.getFloat("valor_custo"));
+            modeloProduto.setPrecoVenda(rs.getFloat("valor_venda"));
+            buscarNomeFornecedor(rs.getInt("id_fornecedor"));
             modeloFornecedor.setNome(nomefornecedor);
             modeloProduto.setFornecedor(modeloFornecedor);
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao buscar o produto!\nErro: " + ex);
+            JOptionPane.showMessageDialog(null, "Produto não cadastrado!\nErro: " + ex);
         }
-        conexao.desconecta();
+        conexao.close();
         return modeloProduto;
     }
 
-    private void buscarNomeFornecedor(int codigo) {
+    private void buscarNomeFornecedor(int codigo) throws SQLException {
 
-        conexaoFornecedor.conector();
-        conexaoFornecedor.SQL("select * from fornecedor where id_fornecedor = " + codigo + " ");
+        this.conexaoFornecedor = new Conectar().openConnection();
+        String sql = "select * from fornecedor where id_fornecedor = " + codigo + " ";
+        pst = conexaoFornecedor.prepareStatement(sql);
+        rs = pst.executeQuery();
         try {
-            conexaoFornecedor.rs.first();
-            nomefornecedor = conexaoFornecedor.rs.getString("nome_fornecedor");
+            nomefornecedor = rs.getString("nome_fornecedor");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar o código!\nErro: " + ex);
         }
-        conexaoFornecedor.desconecta();
+        conexaoFornecedor.close();
     }
 
-    public void alterProduto(ModeloProduto modelo) {
-        buscarCodigoDoProduto(modelo.getFornecedor().getNome());
-        conexao.conector();
+    public void alterProduto(ModeloProduto modelo) throws SQLException {
+        this.conexao = new Conectar().openConnection();
         try {
-            pst = conexao.connection.prepareStatement("update produto set nome_produto=?,quantidade=?,"
+            buscarCodigoDoFornecedor(modelo);
+            pst = conexao.prepareStatement("update produto set nome_produto=?,quantidade=?,"
                     + "valor_custo=?,valor_venda=?,id_fornecedor=? where id_produto=?");
             pst.setString(1, modelo.getNomeProduto());
             pst.setInt(2, modelo.getQuantidadeProduto());
@@ -107,28 +109,49 @@ public class ControleProduto {
             pst.setFloat(4, modelo.getPrecoVenda());
             pst.setInt(5, codigoFornecedor);
             pst.setInt(6, modelo.getIdProduto());
+
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
-                JOptionPane.showMessageDialog(null, "Produto alterado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto "+modelo.getNomeProduto().toLowerCase()+" alterado com sucesso!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao alterar produto!\nErro: " + ex);
         }
-        conexao.desconecta();
+        conexao.close();
     }
 
-    public void excluirProduto(ModeloProduto modelo) {
-        conexao.conector();
+    public void excluirProduto(ModeloProduto modelo) throws SQLException {
+        this.conexao = new Conectar().openConnection();
         try {
-            pst = conexao.connection.prepareStatement("delete from produto where id_produto=?");
+            pst = conexao.prepareStatement("delete from produto where id_produto=?");
             pst.setInt(1, modelo.getIdProduto());
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
                 JOptionPane.showMessageDialog(null, "Produto excluido com sucesso!");
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao excluir produto!\nErro: " + ex);
+            JOptionPane.showMessageDialog(null, "Produto não cadastrado!\nErro: " + ex);
         }
-        conexao.desconecta();
+        conexao.close();
+    }
+
+    public void pesquisar_Produto(ModeloProduto modeloProduto, JTable TabelaProduto) throws SQLException {
+
+        this.conexao = new Conectar().openConnection();
+
+        String sql = "select  id_produto as 'Código',nome_produto as 'Nome',quantidade as 'Quantidade', valor_custo as 'Valor de Compra', valor_venda as 'Valor de Venda', nome_fornecedor as 'Nome do Fornecedor' \n"
+                + "from produto join fornecedor on fornecedor.id_fornecedor = produto.id_fornecedor  where nome_produto like ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            //passando o conteudo da caixa de pesquisa para o ?
+            //atenção ao "%" - continuação da string sql
+            pst.setString(1, modeloProduto.getPesquisa() + "%");
+            rs = pst.executeQuery();
+            // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
+            TabelaProduto.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        conexao.close();
     }
 }

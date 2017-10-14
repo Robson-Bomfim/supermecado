@@ -63,7 +63,7 @@
                       <Component id="ButtonApagar" linkSize="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="TextField_Path" max="32767" attributes="0"/>
@@ -112,7 +112,7 @@
     <Component class="javax.swing.JButton" name="ButtonAdicionar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Icones/if_file_add_48761.png"/>
+          <Image iconType="3" name="/Icones/if_icon-81-document-add.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Adicionar"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -129,7 +129,7 @@
     <Component class="javax.swing.JButton" name="ButtonConsultar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Icones/if_file_search_48764.png"/>
+          <Image iconType="3" name="/Icones/if_icon-74-document-search_315198.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Consultar"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -146,7 +146,7 @@
     <Component class="javax.swing.JButton" name="ButtonAtualizar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Icones/if_file_edit_48763.png"/>
+          <Image iconType="3" name="/Icones/if_icon-136-document-edit_314724.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Alterar"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -163,7 +163,7 @@
     <Component class="javax.swing.JButton" name="ButtonApagar">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Icones/if_file_delete_48762.png"/>
+          <Image iconType="3" name="/Icones/if_icon-27-trash-can_314759.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Apagar"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -189,7 +189,7 @@
     <Component class="javax.swing.JButton" name="Button_Add_Image">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Icones/if_load_upload_48774.png"/>
+          <Image iconType="3" name="/Icones/if_icon-93-inbox-upload.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Adicionar Imagem"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">

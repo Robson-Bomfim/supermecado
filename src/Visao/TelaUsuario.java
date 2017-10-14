@@ -5,8 +5,9 @@
  */
 package Visao;
 
+import Controle.ControleUsuario;
 import java.sql.*;
-import dao.ModuloConexao;
+import dao.Conectar;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Image;
@@ -25,7 +26,8 @@ import javax.swing.text.MaskFormatter;
 
 public class TelaUsuario extends javax.swing.JInternalFrame {
 
-    ModuloConexao conexao = new ModuloConexao();//usando a variavel conexão do dal
+    ControleUsuario controleUsuario = new ControleUsuario();
+    Connection conexao = null;//usando a variavel conexão do dal
 
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
@@ -36,12 +38,13 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     public TelaUsuario() {
         initComponents();
+        this.conexao = new Conectar().openConnection();
         x = "x";
-        conexao.conector();
         //aqui está chamando o método conector(); 
         //que chama a class ModuloConexao que está 
         //dentro do pacote dao
         itensObrigatorios();//metodo para setar o label de vermelho
+        // controleUsuario.preencherCombo(ComboBoxUserPerfil);//preeche o combobox de acordo com o campo perfil
         try {
             MaskFormatter form = new MaskFormatter("##/##/####");
             form.install(FormattedTextFieldData_Nasc);
@@ -60,49 +63,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         lblCodigo.setForeground(Color.RED);
     }
 
-    private void consultar() throws IOException {//metodo para consultar usuário
-        Image img;
-        String sql = "select * from usuario where id_usuario = ?";//string sql que pesquisa a tabela e id do usuario
-        try {
-            pst = conexao.connection.prepareStatement(sql);//linha que faz conexão passando a string sql como parametro para que a pesquisa seja feita dentro do banco
-
-            if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-                JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
-            } else {
-                pst.setString(1, TextFieldUserCodigo.getText());//linha que faz a pesquisa do usuario através do seu codigo
-                rs = pst.executeQuery();//linha que executa a conexão
-                if (rs.next()) {//se a conexão for verdadeira
-                    //as linhas abaixo consulta os valores que são digitados pelo usuário
-                    TextFieldUserNome.setText(rs.getString(2));
-                    TextFieldUserCelular.setText(rs.getString(6));
-                    TextFieldResidencial.setText(rs.getString(7));
-                    TextFieldUserEmail.setText(rs.getString(8));
-                    ComboBoxUserPerfil.setSelectedItem(rs.getString(4).toUpperCase());// a linha se refere especificamente ao combobox
-                    TextFieldUserSenha.setText(rs.getString(3));
-                    FormattedTextFieldData_Nasc.setText((rs.getString(5)));
-                    atualizaDataDoMysql();
-                    /*img = Toolkit.getDefaultToolkit().createImage(rs.getBytes(10));
-                    LabelFoto.setIcon(new javax.swing.ImageIcon(img));*/
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");//se não houver usuário com o código pesquisado essa mensagem aparece para o usuário
-
-                    //as linhas abaixo "limpam" os campos
-                    TextFieldUserNome.setText(null);
-                    TextFieldUserCelular.setText(null);
-                    TextFieldResidencial.setText(null);
-                    TextFieldUserEmail.setText(null);
-                    //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
-                    TextFieldUserSenha.setText(null);
-                    FormattedTextFieldData_Nasc.setText(null);
-                    LabelFoto.setText(null);
-                    TextField_Path.setText(null);
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());//essa mensagem mostra o tipo de erro que ocorreu 
-        }
-    }
-
     private void adicionar() {//metodo para adicionar usuário
         //String result = null;
 
@@ -113,7 +73,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
             String sql1 = "select * from usuario where id_usuario = ?";
             try {
-                pst = conexao.connection.prepareStatement(sql1);//faz a conexão com o banco executando e passando a string sql como parametro
+                pst = conexao.prepareStatement(sql1);//faz a conexão com o banco executando e passando a string sql como parametro
                 pst.setString(1, TextFieldUserCodigo.getText());
             } catch (SQLException ex) {
                 Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,7 +86,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,data_nasc,celular,residencial,email) values (?,?,?,?,?,?,?,?)";
 
                 try {
-                    pst = conexao.connection.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
+                    pst = conexao.prepareStatement(sql);//faz a conexão com o banco executando e passando a string sql como parametro
                     //validaçao dos campos obrigatórios
                     //as linhas abaixo insere os valores que são digitados pelo usuário
 
@@ -156,7 +116,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         TextFieldUserCelular.setText(null);
                         TextFieldResidencial.setText(null);
                         TextFieldUserEmail.setText(null);
-                        //ComboBoxUserPerfil.setSelectedItem(null);// a linha se refere especificamente ao combobox
                         TextFieldUserSenha.setText(null);
                         FormattedTextFieldData_Nasc.setText(null);
                         TextField_Path.setText(null);
@@ -179,7 +138,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             String sql = "update usuario set nome_login=?,senha=?,perfil=?,data_nasc=?,celular=?,residencial=?,email=? where id_usuario=?";
             try {
 
-                pst = conexao.connection.prepareStatement(sql);
+                pst = conexao.prepareStatement(sql);
                 pst.setString(1, TextFieldUserNome.getText().toUpperCase());
                 pst.setString(2, TextFieldUserSenha.getText());
                 pst.setString(3, ComboBoxUserPerfil.getSelectedItem().toString());
@@ -226,7 +185,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             if (confirmar == JOptionPane.YES_OPTION) {
                 String sql = "delete from usuario where id_usuario = ?";
                 try {
-                    pst = conexao.connection.prepareStatement(sql);
+                    pst = conexao.prepareStatement(sql);
                     pst.setString(1, TextFieldUserCodigo.getText());
                     int apagado = pst.executeUpdate();
 
@@ -248,16 +207,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 }
             }
         }
-    }
-
-    public void atualizaDataDoMysql() {
-        //conversão de datas yyyy/mm/dd
-        String dia = FormattedTextFieldData_Nasc.getText().substring(8, 10);
-        String mes = FormattedTextFieldData_Nasc.getText().substring(5, 7);
-        String ano = FormattedTextFieldData_Nasc.getText().substring(0, 4);
-        String dataParaMysql = dia + "/" + mes + "/" + ano;
-        FormattedTextFieldData_Nasc.setText(dataParaMysql);
-        //System.out.println(dataParaMysql);
     }
 
     public String dataParaMysql(String data) {
@@ -336,7 +285,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        ButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_add_48761.png"))); // NOI18N
+        ButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-81-document-add.png"))); // NOI18N
         ButtonAdicionar.setToolTipText("Adicionar");
         ButtonAdicionar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonAdicionar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -346,7 +295,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        ButtonConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_search_48764.png"))); // NOI18N
+        ButtonConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-74-document-search_315198.png"))); // NOI18N
         ButtonConsultar.setToolTipText("Consultar");
         ButtonConsultar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonConsultar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -356,7 +305,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        ButtonAtualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_edit_48763.png"))); // NOI18N
+        ButtonAtualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-136-document-edit_314724.png"))); // NOI18N
         ButtonAtualizar.setToolTipText("Alterar");
         ButtonAtualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonAtualizar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -366,7 +315,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        ButtonApagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_delete_48762.png"))); // NOI18N
+        ButtonApagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-27-trash-can_314759.png"))); // NOI18N
         ButtonApagar.setToolTipText("Apagar");
         ButtonApagar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonApagar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -378,7 +327,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         LabelFoto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        Button_Add_Image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_load_upload_48774.png"))); // NOI18N
+        Button_Add_Image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-93-inbox-upload.png"))); // NOI18N
         Button_Add_Image.setToolTipText("Adicionar Imagem");
         Button_Add_Image.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Button_Add_Image.setPreferredSize(new java.awt.Dimension(40, 40));
@@ -596,7 +545,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         .addGap(177, 177, 177)
                         .addComponent(ButtonApagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
+                        .addGap(60, 60, 60)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(TextField_Path)
@@ -647,9 +596,19 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ButtonApagarActionPerformed
 
     private void ButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonConsultarActionPerformed
+        if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
+            JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
+            return;
+        }
         try {
-            // chamando o método consultar
-            consultar();
+            try {
+                // chamando o método consultar
+                controleUsuario.consultar(TextFieldUserCodigo, TextFieldUserNome, TextFieldUserSenha, TextFieldUserEmail, TextFieldUserEmail, TextFieldUserSenha, TextField_Path, ComboBoxUserPerfil, FormattedTextFieldData_Nasc, LabelFoto);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao consultar usuario\nErro: !" + ex);
+            }
+
+
         } catch (IOException ex) {
             Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -5,12 +5,13 @@
  */
 package Visao;
 
+import Controle.ControleFornecedor;
 import Controle.ControleProduto;
 import Modelo.ModeloFornecedor;
-import dao.ModuloConexao;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import Modelo.ModeloProduto;
+import dao.Conectar;
 
 /**
  *
@@ -21,16 +22,17 @@ public class Produto extends javax.swing.JInternalFrame {
     ModeloProduto modeloProduto = new ModeloProduto();
     ModeloFornecedor modelofornecedor = new ModeloFornecedor();
     ControleProduto controleProduto = new ControleProduto();
+    ControleFornecedor controleFornecedor = new ControleFornecedor();
     public static String x;
-    ModuloConexao conexao = new ModuloConexao();
+    Connection conexaoProduto = null;
     PreparedStatement pst;
     ResultSet rs;
 
-    public Produto() {
+    public Produto() throws SQLException {
         initComponents();
+        this.conexaoProduto = new Conectar().openConnection();
         x = "x";
-        conexao.conector();
-        preencherCombo();
+        controleFornecedor.preencherCombo(ComboBoxFornecedor);
     }
 
     /**
@@ -57,15 +59,13 @@ public class Produto extends javax.swing.JInternalFrame {
         ComboBoxFornecedor = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TabelaProduto = new javax.swing.JTable();
         ButtonAdicionar = new javax.swing.JButton();
-        ButtonPesquisar = new javax.swing.JButton();
         ButtonAlterar = new javax.swing.JButton();
         ButtonExcluir = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
         TextFieldPesquisar = new javax.swing.JTextField();
         ButtonSalvar = new javax.swing.JButton();
-        ButtonCancelar = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -132,10 +132,16 @@ public class Produto extends javax.swing.JInternalFrame {
 
         ComboBoxFornecedor.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         ComboBoxFornecedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboBoxFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboBoxFornecedorActionPerformed(evt);
+            }
+        });
 
         jLabel7.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TabelaProduto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TabelaProduto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -146,9 +152,15 @@ public class Produto extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TabelaProduto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabelaProdutoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TabelaProduto);
 
-        ButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_add_48761.png"))); // NOI18N
+        ButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-81-document-add.png"))); // NOI18N
+        ButtonAdicionar.setToolTipText("Adicionar");
         ButtonAdicionar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,35 +168,23 @@ public class Produto extends javax.swing.JInternalFrame {
             }
         });
 
-        ButtonPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_search_48764.png"))); // NOI18N
-        ButtonPesquisar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonPesquisar.setPreferredSize(new java.awt.Dimension(60, 60));
-        ButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonPesquisarActionPerformed(evt);
-            }
-        });
-
-        ButtonAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_edit_48763.png"))); // NOI18N
+        ButtonAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-136-document-edit_314724.png"))); // NOI18N
+        ButtonAlterar.setToolTipText("Alterar");
         ButtonAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonAlterar.setEnabled(false);
         ButtonAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonAlterarActionPerformed(evt);
             }
         });
 
-        ButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_file_delete_48762.png"))); // NOI18N
+        ButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_icon-27-trash-can_314759.png"))); // NOI18N
+        ButtonExcluir.setToolTipText("Excluir");
         ButtonExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonExcluir.setEnabled(false);
         ButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonExcluirActionPerformed(evt);
             }
         });
-
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel8.setText("Pesquisa:");
 
         TextFieldPesquisar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         TextFieldPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -192,25 +192,22 @@ public class Produto extends javax.swing.JInternalFrame {
                 TextFieldPesquisarActionPerformed(evt);
             }
         });
+        TextFieldPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextFieldPesquisarKeyReleased(evt);
+            }
+        });
 
         ButtonSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/salvar.png"))); // NOI18N
         ButtonSalvar.setToolTipText("Salvar");
         ButtonSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonSalvar.setEnabled(false);
         ButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonSalvarActionPerformed(evt);
             }
         });
 
-        ButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/cancelar.png"))); // NOI18N
-        ButtonCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonCancelar.setEnabled(false);
-        ButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonCancelarActionPerformed(evt);
-            }
-        });
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_Search.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -243,51 +240,43 @@ public class Produto extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel3))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
+                                .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TextFieldQuantidade)
-                            .addComponent(ComboBoxFornecedor, 0, 146, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(ButtonAdicionar)
-                        .addGap(100, 100, 100)
-                        .addComponent(ButtonSalvar)
-                        .addGap(100, 100, 100)
-                        .addComponent(ButtonPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(100, 100, 100)
-                        .addComponent(ButtonAlterar)
-                        .addGap(100, 100, 100)
-                        .addComponent(ButtonExcluir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ButtonCancelar)))
+                                .addComponent(jLabel9))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(123, 123, 123)
+                                .addComponent(ButtonAdicionar)
+                                .addGap(163, 163, 163)
+                                .addComponent(ButtonSalvar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(ButtonAlterar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ButtonExcluir)
+                                .addGap(75, 75, 75))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(TextFieldQuantidade)
+                                    .addComponent(ComboBoxFornecedor, 0, 146, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonAdicionar, ButtonAlterar, ButtonCancelar, ButtonExcluir, ButtonPesquisar, ButtonSalvar});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ButtonAdicionar, ButtonAlterar, ButtonExcluir, ButtonSalvar});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ButtonPesquisar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ButtonAlterar)
-                                .addComponent(ButtonExcluir))
-                            .addComponent(ButtonSalvar, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addComponent(ButtonAdicionar))
-                    .addComponent(ButtonCancelar))
-                .addGap(91, 91, 91)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(55, 55, 55)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ButtonSalvar)
+                    .addComponent(ButtonAdicionar)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ButtonAlterar)
+                        .addComponent(ButtonExcluir)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -307,12 +296,16 @@ public class Produto extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4)
                             .addComponent(TextFieldPrecoC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonAlterar, ButtonCancelar, ButtonExcluir, ButtonPesquisar, ButtonSalvar});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ButtonAdicionar, ButtonAlterar, ButtonExcluir, ButtonSalvar});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -340,133 +333,99 @@ public class Produto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void TextFieldPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldPesquisarActionPerformed
-        // TODO add your handling code here:       
+
     }//GEN-LAST:event_TextFieldPesquisarActionPerformed
 
     private void ButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAdicionarActionPerformed
-
-        TextFieldPrecoC.setEnabled(true);
-        TextFieldPrecoV.setEnabled(true);
-        TextFieldProduto.setEnabled(true);
-        TextFieldQuantidade.setEnabled(true);
-        ButtonSalvar.setEnabled(true);
-        ButtonCancelar.setEnabled(true);
-        TextFieldCodigo.setText(null);
-        TextFieldPrecoC.setText(null);
-        TextFieldPrecoV.setText(null);
-        TextFieldProduto.setText(null);
-        TextFieldQuantidade.setText(null);
+        //chamando o metodo adicionar_produto
+        adicionar_produto();
     }//GEN-LAST:event_ButtonAdicionarActionPerformed
 
     private void ButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSalvarActionPerformed
-        // TODO add your handling code here:
-        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
-        } else {
-            try {
-                // chamando metodo adicionar
-                salvarProduto();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
-            }
+        try {
+            // chamando metodo salvar
+            salvarProduto();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
         }
-        TextFieldPrecoC.setEnabled(!true);
-        TextFieldPrecoV.setEnabled(!true);
-        TextFieldProduto.setEnabled(!true);
-        TextFieldQuantidade.setEnabled(!true);
-        ButtonAlterar.setEnabled(!true);
-        ButtonExcluir.setEnabled(!true);
-        ButtonSalvar.setEnabled(!true);
-        ButtonCancelar.setEnabled(!true);
-        TextFieldPrecoC.setText(null);
-        TextFieldPrecoV.setText(null);
-        TextFieldProduto.setText(null);
-        TextFieldQuantidade.setText(null);
     }//GEN-LAST:event_ButtonSalvarActionPerformed
 
-    private void ButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonPesquisarActionPerformed
-        if (TextFieldPesquisar.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha o campo pesquisar!");//se o campo estiver vazio retorna essa mensagem para o usuario
-        } else {
-            try {
-                // TODO add your handling code here:
-                pesquisar();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(rootPane, "Erro ao pesquisar produto!\nErro: " + ex);
-            }
-        }
-        ButtonAlterar.setEnabled(true);
-        ButtonExcluir.setEnabled(true);
-        TextFieldPrecoC.setEnabled(true);
-        TextFieldPrecoV.setEnabled(true);
-        TextFieldProduto.setEnabled(true);
-        TextFieldQuantidade.setEnabled(true);
-    }//GEN-LAST:event_ButtonPesquisarActionPerformed
-
     private void ButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExcluirActionPerformed
-        // TODO add your handling code here:
-        excluir();
-        TextFieldPrecoC.setEnabled(!true);
-        TextFieldPrecoV.setEnabled(!true);
-        TextFieldProduto.setEnabled(!true);
-        TextFieldQuantidade.setEnabled(!true);
-        ButtonAlterar.setEnabled(!true);
-        ButtonExcluir.setEnabled(!true);
-        ButtonSalvar.setEnabled(!true);
-        ButtonCancelar.setEnabled(!true);
-        TextFieldCodigo.setText(null);
-        TextFieldPrecoC.setText(null);
-        TextFieldPrecoV.setText(null);
-        TextFieldProduto.setText(null);
-        TextFieldQuantidade.setText(null);
+        try {
+            // chamando o metodo excluir
+            excluir();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao excluir produto!\nErro: " + ex);
+        }
     }//GEN-LAST:event_ButtonExcluirActionPerformed
 
     private void ButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAlterarActionPerformed
-        // TODO add your handling code here:
-        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
-        } else {
+        try {
+            // chamando o metodo alterar
             alterar();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao alterar produto!\nErro: " + ex);
         }
-        TextFieldPrecoC.setEnabled(!true);
-        TextFieldPrecoV.setEnabled(!true);
-        TextFieldProduto.setEnabled(!true);
-        TextFieldQuantidade.setEnabled(!true);
-        ButtonAlterar.setEnabled(!true);
-        ButtonExcluir.setEnabled(!true);
-        ButtonSalvar.setEnabled(!true);
-        ButtonCancelar.setEnabled(!true);
-        TextFieldCodigo.setText(null);
-        TextFieldPrecoC.setText(null);
-        TextFieldPrecoV.setText(null);
-        TextFieldProduto.setText(null);
-        TextFieldQuantidade.setText(null);
     }//GEN-LAST:event_ButtonAlterarActionPerformed
 
-    private void ButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCancelarActionPerformed
+    private void TextFieldPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldPesquisarKeyReleased
+        try {
+            // chamando o metodo pesquisar_Produto
+            pesquisar_Produto();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao pesquisar produto!\nErro: " + ex);
+        }
+    }//GEN-LAST:event_TextFieldPesquisarKeyReleased
+
+    private void TabelaProdutoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelaProdutoMouseClicked
+        // chamando o metodo setar_campos
+        setar_campos();
+    }//GEN-LAST:event_TabelaProdutoMouseClicked
+
+    private void ComboBoxFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxFornecedorActionPerformed
         // TODO add your handling code here:
-        TextFieldPrecoC.setEnabled(!true);
-        TextFieldPrecoV.setEnabled(!true);
-        TextFieldProduto.setEnabled(!true);
-        TextFieldQuantidade.setEnabled(!true);
-        ButtonAlterar.setEnabled(!true);
-        ButtonExcluir.setEnabled(!true);
-        ButtonSalvar.setEnabled(!true);
-        ButtonCancelar.setEnabled(!true);
-        TextFieldCodigo.setText(null);
-        TextFieldPrecoC.setText(null);
-        TextFieldPrecoV.setText(null);
-        TextFieldProduto.setText(null);
-        TextFieldQuantidade.setText(null);
+    }//GEN-LAST:event_ComboBoxFornecedorActionPerformed
 
-    }//GEN-LAST:event_ButtonCancelarActionPerformed
+    private void excluir() throws SQLException {
+        
+                // condiçao para verificar se os campos estão vazios
+        if (TextFieldCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
+            JOptionPane.showMessageDialog(null, "Selecione o Produto!");//se o campo estiver vazio retorna essa mensagem para o usuario
+            return;
+        }
 
-    private void excluir() {
-        modeloProduto.setIdProduto(Integer.parseInt(TextFieldCodigo.getText()));
-        controleProduto.excluirProduto(modeloProduto);
+        int excluir = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o produto "+TextFieldProduto.getText().toLowerCase()+" ?", "Atenção", JOptionPane.YES_NO_OPTION);
+        // a condição abaixo valida a escolha do usuário
+        if (excluir == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
+        {
+
+            modeloProduto.setIdProduto(Integer.parseInt(TextFieldCodigo.getText()));
+            controleProduto.excluirProduto(modeloProduto);
+
+            //desabilita os campos
+            TextFieldPrecoC.setEnabled(!true);
+            TextFieldPrecoV.setEnabled(!true);
+            TextFieldProduto.setEnabled(!true);
+            TextFieldQuantidade.setEnabled(!true);
+            //Habilita os botões
+            ButtonSalvar.setEnabled(true);
+            //limpam os campos
+            TextFieldCodigo.setText(null);
+            TextFieldPrecoC.setText(null);
+            TextFieldPrecoV.setText(null);
+            TextFieldProduto.setText(null);
+            TextFieldQuantidade.setText(null);
+        }
     }
 
-    private void alterar() {
+    private void alterar() throws SQLException {
+
+        // condiçao para verificar se os campos estão vazios
+        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
+            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
+            return;
+        }
+
         modeloProduto.setIdProduto(Integer.parseInt(TextFieldCodigo.getText()));
         modelofornecedor.setNome((String) ComboBoxFornecedor.getSelectedItem());
         modeloProduto.setFornecedor(modelofornecedor);
@@ -475,20 +434,29 @@ public class Produto extends javax.swing.JInternalFrame {
         modeloProduto.setPrecoVenda(Float.parseFloat(TextFieldPrecoV.getText()));
         modeloProduto.setQuantidadeProduto(Integer.parseInt(TextFieldQuantidade.getText()));
         controleProduto.alterProduto(modeloProduto);
-    }
 
-    private void pesquisar() throws SQLException {
-        modeloProduto.setPesquisa(TextFieldPesquisar.getText().toUpperCase());
-        ModeloProduto model = controleProduto.buscarProduto(modeloProduto);
-        TextFieldCodigo.setText(String.valueOf(model.getIdProduto()));
-        TextFieldProduto.setText(model.getNomeProduto());
-        TextFieldQuantidade.setText(String.valueOf(model.getQuantidadeProduto()));
-        TextFieldPrecoC.setText(String.valueOf(model.getPrecoCompra()));
-        TextFieldPrecoV.setText(String.valueOf(model.getPrecoVenda()));
-        ComboBoxFornecedor.setSelectedItem(model.getFornecedor().getNome());
+        //habilita os campos
+        TextFieldPrecoC.setEnabled(!true);
+        TextFieldPrecoV.setEnabled(!true);
+        TextFieldProduto.setEnabled(!true);
+        TextFieldQuantidade.setEnabled(!true);
+        //Habilita o botão salvar
+        ButtonSalvar.setEnabled(true);
+        //limpam os campos
+        TextFieldCodigo.setText(null);
+        TextFieldPrecoC.setText(null);
+        TextFieldPrecoV.setText(null);
+        TextFieldProduto.setText(null);
+        TextFieldQuantidade.setText(null);
     }
 
     private void salvarProduto() throws SQLException {
+
+        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
+            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
+            return;
+        }
+
         modelofornecedor.setNome((String) ComboBoxFornecedor.getSelectedItem());
         modeloProduto.setFornecedor(modelofornecedor);
         modeloProduto.setNomeProduto(TextFieldProduto.getText().toUpperCase());
@@ -496,31 +464,71 @@ public class Produto extends javax.swing.JInternalFrame {
         modeloProduto.setPrecoVenda(Float.parseFloat(TextFieldPrecoV.getText()));
         modeloProduto.setQuantidadeProduto(Integer.parseInt(TextFieldQuantidade.getText()));
         controleProduto.adionarProduto(modeloProduto);
+
+        //desabilita os campos
+        TextFieldPrecoC.setEnabled(!true);
+        TextFieldPrecoV.setEnabled(!true);
+        TextFieldProduto.setEnabled(!true);
+        TextFieldQuantidade.setEnabled(!true);
+        //Habilita os botões
+        ButtonAlterar.setEnabled(true);
+        ButtonExcluir.setEnabled(true);
+        ButtonSalvar.setEnabled(true);
+        //limpam os campos
+        TextFieldPrecoC.setText(null);
+        TextFieldPrecoV.setText(null);
+        TextFieldProduto.setText(null);
+        TextFieldQuantidade.setText(null);
     }
 
-    private void preencherCombo() {
-        String sql = "select * from fornecedor order by nome_fornecedor";
-        try {
-            pst = conexao.connection.prepareStatement(sql);
-            rs = pst.executeQuery();
-            ComboBoxFornecedor.removeAllItems();
-            while (rs.next()) {
-                ComboBoxFornecedor.addItem(rs.getString("nome_fornecedor"));
-            }
-            conexao.desconecta();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Erro ao preencher combobox!\nErro: " + ex);
-        }
+    private void pesquisar_Produto() throws SQLException {
+
+        modeloProduto.setPesquisa(TextFieldPesquisar.getText());
+        controleProduto.pesquisar_Produto(modeloProduto, TabelaProduto);
     }
 
+    private void adicionar_produto() {
+        TextFieldPrecoC.setEnabled(true);
+        TextFieldPrecoV.setEnabled(true);
+        TextFieldProduto.setEnabled(true);
+        TextFieldQuantidade.setEnabled(true);
+        ButtonSalvar.setEnabled(true);
+        TextFieldCodigo.setText(null);
+        TextFieldPesquisar.setText(null);
+        TextFieldPrecoC.setText(null);
+        TextFieldPrecoV.setText(null);
+        TextFieldProduto.setText(null);
+        TextFieldQuantidade.setText(null);
+    }
+
+    private void setar_campos() {
+        // setar os valores na TabelaProduto
+        int setar = TabelaProduto.getSelectedRow();
+
+        TextFieldCodigo.setText(TabelaProduto.getModel().getValueAt(setar, 0).toString());
+        TextFieldProduto.setText(TabelaProduto.getModel().getValueAt(setar, 1).toString());
+        TextFieldQuantidade.setText(TabelaProduto.getModel().getValueAt(setar, 2).toString());
+        TextFieldPrecoC.setText(TabelaProduto.getModel().getValueAt(setar, 3).toString());
+        TextFieldPrecoV.setText(TabelaProduto.getModel().getValueAt(setar, 4).toString());
+        ComboBoxFornecedor.setSelectedItem(TabelaProduto.getModel().getValueAt(setar, 5).toString());
+        //desabilita o botão salvar
+        ButtonSalvar.setEnabled(false);
+        //habilita os campos
+        TextFieldProduto.setEnabled(true);
+        TextFieldQuantidade.setEnabled(true);
+        TextFieldPrecoC.setEnabled(true);
+        TextFieldPrecoV.setEnabled(true);
+        ComboBoxFornecedor.setEnabled(true);
+        ButtonAlterar.setEnabled(true);
+        ButtonExcluir.setEnabled(true);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonAdicionar;
     private javax.swing.JButton ButtonAlterar;
-    private javax.swing.JButton ButtonCancelar;
     private javax.swing.JButton ButtonExcluir;
-    private javax.swing.JButton ButtonPesquisar;
     private javax.swing.JButton ButtonSalvar;
     private javax.swing.JComboBox<String> ComboBoxFornecedor;
+    private javax.swing.JTable TabelaProduto;
     private javax.swing.JTextField TextFieldCodigo;
     private javax.swing.JTextField TextFieldPesquisar;
     private javax.swing.JTextField TextFieldPrecoC;
@@ -534,9 +542,8 @@ public class Produto extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

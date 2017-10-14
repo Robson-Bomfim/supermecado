@@ -5,70 +5,20 @@
  */
 package Visao;
 
-import java.sql.*;
-import dao.ModuloConexao;
-import java.awt.Color;
+import Controle.ControleUsuario;
+import dao.Conectar;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
 
-    ModuloConexao conexao = new ModuloConexao();
-    //Connection conexao = null;//usando a variavel conexão do dal
-
-    //criando variaveis especiais para conexão com o banco
-    //Prepared Statement e ResultSet são framework do pacote java.sql
-    //e serve para preparar e executar as instruções sql
-    PreparedStatement pst;
-    ResultSet rs;
-
-    public void logar() {
-        String slq = "select * from usuario where nome_login = ? and senha = ?";
-        try {
-            //as linhas abaixo preparam a consulta ao banco em função do 
-            //que foi digitado nas caixas de textos 
-            //o "?" é substituido pelo conteúdos das variáveis           
-            pst = conexao.connection.prepareStatement(slq);
-            pst.setString(1, TextFieldUsuario.getText().toUpperCase());
-            pst.setString(2, PasswordField.getText());
-
-            rs = pst.executeQuery();//a linha executa a query
-
-            if (rs.next()) {//se existir usuario e senha correspondente
-
-                String perfil = rs.getString(4);//a linha contém o conteúdo do campo perfil da tabela login
-                //System.out.println(perfil);
-                // a estrutura abaixo faz o tratamento do perfil do usuario
-                if (perfil.equalsIgnoreCase("Admin")) {
-                    Home h = new Home();//estância da tela principal
-                    h.setVisible(true);// chama a tela principal
-                    Home.MenuRelatorio.setEnabled(true);
-                    Home.MenuUsuario.setEnabled(true);
-                    Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
-                    Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
-                    Home.LabelTipoUser.setForeground(Color.RED);
-                    this.dispose();
-                    conexao.desconecta();
-                } else if (perfil.equalsIgnoreCase("User")) {
-                    Home h = new Home();//estância da tela principal
-                    Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
-                    Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
-                    h.setVisible(true);// chama a tela principal  */    
-                    this.dispose();//fecha a tela de login
-                    conexao.desconecta();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Perfil desconhecido!");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuário e/ou Senha Inválido(s)!");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }
+    Connection conexao = null;//usando a variavel conexão do dal
+    ControleUsuario controleUsuario = new ControleUsuario();
 
     public Login() {
         initComponents();
-        conexao.conector();
+        this.conexao = new Conectar().openConnection();
+                
         // a linha abaixo serve de apoio ao status de conexão
         //System.out.println(conexao);
         if (conexao != null) {
@@ -250,7 +200,8 @@ public class Login extends javax.swing.JFrame {
         if (TextFieldUsuario.getText().isEmpty() || PasswordField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos antes de Logar!");
         } else {
-            logar();// chamando o metodo logar
+            controleUsuario.logar(TextFieldUsuario, PasswordField);// chamando o metodo logar
+            this.dispose();//fecha a tela de login
         }
     }//GEN-LAST:event_ButtonLogarActionPerformed
 

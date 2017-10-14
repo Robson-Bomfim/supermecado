@@ -9,10 +9,10 @@ package Modelo;
 public class ModeloFornecedor {
     private int id;
     private String nome;
-    private String endereco;
-    private String bairro;
-    private String cidade;
     private String cnpj;
+    private String email;
+    private String telefone;
+    private ModeloEndereco endereco; 
 
     public int getId() {
         return id;
@@ -30,28 +30,12 @@ public class ModeloFornecedor {
         this.nome = nome;
     }
 
-    public String getEndereco() {
+    public ModeloEndereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(ModeloEndereco endereco) {
         this.endereco = endereco;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
     }
 
     public String getCnpj() {
@@ -60,6 +44,22 @@ public class ModeloFornecedor {
 
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
     
 }
