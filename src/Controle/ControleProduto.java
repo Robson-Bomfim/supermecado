@@ -13,20 +13,19 @@ import net.proteanit.sql.DbUtils;
 
 public class ControleProduto {
 
-    Connection conexao = null;
-    Connection conexaoFornecedor = null;
-    Connection conexaoRead = null;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
+    private Connection conexao = null;
+    private Connection conexaoFornecedor = null;
+    private PreparedStatement pst = null;
+    private ResultSet rs = null;
+    private int idFornecedor;
+    private String nomefornecedor;
     ModeloProduto modeloProduto = new ModeloProduto();
     ModeloFornecedor modeloFornecedor = new ModeloFornecedor();
-    int codigoFornecedor;
-    String nomefornecedor;
 
     public void adionarProduto(ModeloProduto modelo) throws SQLException {
         this.conexao = new Conectar().openConnection();
         try {
-            buscarCodigoDoFornecedor(modelo);
+            buscarIdDoFornecedor(modelo);//metodo para buscar o id do fornecedor
             String sql = "insert into produto (nome_produto, quantidade, valor_custo, valor_venda, id_fornecedor)"
                     + "values (?,?,?,?,?)";
             pst = conexao.prepareStatement(sql);
@@ -34,7 +33,7 @@ public class ControleProduto {
             pst.setInt(2, modelo.getQuantidadeProduto());
             pst.setFloat(3, modelo.getPrecoCompra());
             pst.setFloat(4, modelo.getPrecoVenda());
-            pst.setInt(5, codigoFornecedor);
+            pst.setInt(5, idFornecedor);//variável contém o id do fornecedor
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
@@ -46,68 +45,31 @@ public class ControleProduto {
         conexao.close();
     }
 
-    private void buscarCodigoDoFornecedor(ModeloProduto modelo) throws SQLException {
+    private void buscarIdDoFornecedor(ModeloProduto modelo) throws SQLException {
         this.conexao = new Conectar().openConnection();
         String sql = "select * from fornecedor where nome_fornecedor = '" + modelo.getFornecedor().getNome() + "'";
         try {
             pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
             if (rs.next()) {
-                codigoFornecedor = rs.getInt("id_fornecedor");
+                idFornecedor = rs.getInt("id_fornecedor");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar o código!\nErro: " + ex);
         }
     }
 
-    public ModeloProduto buscarProduto(ModeloProduto modelo) throws SQLException {
-
-        this.conexao = new Conectar().openConnection();
-        String sql = "select * from produto where nome_produto like '%" + modelo.getPesquisa() + "%'";
-        pst = conexao.prepareStatement(sql);
-        rs = pst.executeQuery();
-        try {
-            modeloProduto.setIdProduto(rs.getInt("id_produto"));
-            modeloProduto.setNomeProduto(rs.getString("nome_produto"));
-            modeloProduto.setQuantidadeProduto(rs.getInt("quantidade"));
-            modeloProduto.setPrecoCompra(rs.getFloat("valor_custo"));
-            modeloProduto.setPrecoVenda(rs.getFloat("valor_venda"));
-            buscarNomeFornecedor(rs.getInt("id_fornecedor"));
-            modeloFornecedor.setNome(nomefornecedor);
-            modeloProduto.setFornecedor(modeloFornecedor);
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Produto não cadastrado!\nErro: " + ex);
-        }
-        conexao.close();
-        return modeloProduto;
-    }
-
-    private void buscarNomeFornecedor(int codigo) throws SQLException {
-
-        this.conexaoFornecedor = new Conectar().openConnection();
-        String sql = "select * from fornecedor where id_fornecedor = " + codigo + " ";
-        pst = conexaoFornecedor.prepareStatement(sql);
-        rs = pst.executeQuery();
-        try {
-            nomefornecedor = rs.getString("nome_fornecedor");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao buscar o código!\nErro: " + ex);
-        }
-        conexaoFornecedor.close();
-    }
-
     public void alterProduto(ModeloProduto modelo) throws SQLException {
         this.conexao = new Conectar().openConnection();
         try {
-            buscarCodigoDoFornecedor(modelo);
+            buscarIdDoFornecedor(modelo);
             pst = conexao.prepareStatement("update produto set nome_produto=?,quantidade=?,"
                     + "valor_custo=?,valor_venda=?,id_fornecedor=? where id_produto=?");
             pst.setString(1, modelo.getNomeProduto());
             pst.setInt(2, modelo.getQuantidadeProduto());
             pst.setFloat(3, modelo.getPrecoCompra());
             pst.setFloat(4, modelo.getPrecoVenda());
-            pst.setInt(5, codigoFornecedor);
+            pst.setInt(5, idFornecedor);//variável que contém o id do fornecedor
             pst.setInt(6, modelo.getIdProduto());
 
             int adicionado = pst.executeUpdate();

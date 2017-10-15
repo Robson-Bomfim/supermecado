@@ -18,19 +18,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-public class ControleUsuario {
+
+public class ControleUsuario{
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
     //e serve para preparar e executar as instruções sql
 
     private Connection conexaoUsuario = null;
+    private Connection conexaoUser = null;
     private ResultSet rs = null;
     private PreparedStatement pst = null;
-    ModeloEndereco modeloEndereco = new ModeloEndereco(); 
-    private int codigoUsuario;
-    private int codigoEndereco;
+    private int idEndereco;
+    ModeloEndereco modeloEndereco = new ModeloEndereco();
+    ModeloEndereco modelEndereco = new ModeloEndereco();
 
     public void logar(ModeloUsuario modeloUsuario) throws SQLException {
         this.conexaoUsuario = new Conectar().openConnection();
@@ -85,7 +87,8 @@ public class ControleUsuario {
         this.conexaoUsuario = new Conectar().openConnection();
 
         try {
-            buscarCodigoDoEndereco(modeloUsuario);
+            buscarIdDoEndereco(modeloUsuario);//metodo para buscar o id do endereço referente ao usuario correspondente
+            
             String sql2 = "update usuario set nome_login=?,senha=?,perfil=?,celular=?,email=?,id_endereco=? where id_usuario=?";
             pst = conexaoUsuario.prepareStatement(sql2);
             pst.setString(1, modeloUsuario.getNome_login().toUpperCase());
@@ -93,7 +96,7 @@ public class ControleUsuario {
             pst.setString(3, modeloUsuario.getPerfil());
             pst.setString(4, modeloUsuario.getCelular());
             pst.setString(5, modeloUsuario.getEmail());
-            pst.setInt(6, codigoEndereco);
+            pst.setInt(6, idEndereco);//variável que contém o id do endereço correspondente
             pst.setInt(7, modeloUsuario.getId_usuario());
             pst.executeUpdate();
 
@@ -104,7 +107,7 @@ public class ControleUsuario {
             pst.setString(3, modeloEndereco.getEstado());
             pst.setString(4, modeloEndereco.getCidade());
             pst.setString(5, modeloEndereco.getBairro());
-            pst.setInt(6, codigoEndereco);
+            pst.setInt(6, idEndereco);//variável que contém o id do endereço correspondente
 
             int adicionado = pst.executeUpdate();
 
@@ -117,19 +120,13 @@ public class ControleUsuario {
         conexaoUsuario.close();
     }
 
-    public void consultar(ModeloUsuario modeloUsuario) throws SQLException {
+    public ModeloUsuario consultar(ModeloUsuario modeloUsuario) throws SQLException {
         this.conexaoUsuario = new Conectar().openConnection();
         try {
-            String join = "select id_usuario,nome_login,senha,perfil,celular,email,nome_endereco,numero,"
-                    + "estado_endereco,Cidade_endereco,bairro_endereco\n"
-                    + "from usuario\n"
-                    + "join endereco on usuario.id_endereco = endereco.id_endereco;";
+            String sql = "select * from usuario where id_usuario = " + modeloUsuario.getId_usuario();
 
-            pst = conexaoUsuario.prepareStatement(join);
-
-            modeloUsuario.setId_usuario(rs.getInt(1));//linha que faz a pesquisa do usuario através do seu codigo
-
-            rs = pst.executeQuery();//linha que executa a conexão
+            pst = conexaoUsuario.prepareStatement(sql);
+            rs = pst.executeQuery();
 
             if (rs.next()) {//se a conexão for verdadeira
                 //as linhas abaixo consulta os valores que são digitados pelo usuário
@@ -138,38 +135,20 @@ public class ControleUsuario {
                 modeloUsuario.setPerfil(rs.getString("perfil").toUpperCase());// a linha se refere especificamente ao combobox
                 modeloUsuario.setCelular(rs.getString("celular"));
                 modeloUsuario.setEmail(rs.getString("email"));
-
-                modeloEndereco.setRua(rs.getString("nome_endereco").toUpperCase());
-                modeloEndereco.setNumero(rs.getInt("numero"));
-                modeloEndereco.setEstado(rs.getString("estado_endereco").toUpperCase());
-                modeloEndereco.setCidade(rs.getString("Cidade_endereco").toUpperCase());
-                modeloEndereco.setBairro(rs.getString("bairro_endereco").toUpperCase());
-
-                int adicionado = pst.executeUpdate();
-
-                if (adicionado > 0) {
-                    JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!");
-                }
-            }
+                modeloEndereco.setId(rs.getInt("id_endereco"));              
+                buscarDadosEndereco(modeloEndereco);//metodo para buscar os dados do endereço referente ao seu id
+                modeloUsuario.setEndereco(modelEndereco);
+            } 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao adicionar o usuário!\nErro: " + ex);
+            JOptionPane.showMessageDialog(null, "Erro ao consultar o usuário!\nErro: " + ex);
         }
         conexaoUsuario.close();
+        return modeloUsuario;
     }
 
     public void adicionarUsuario(ModeloUsuario modeloUsuario, ModeloEndereco modeloEndereco) throws SQLException {//metodo para adicionar usuário
         this.conexaoUsuario = new Conectar().openConnection();
         try {
-            /*String sql_user = "select * from usuario where id_usuario = ?";
-            pst = conexaoUsuario.prepareStatement(sql_user);//faz a conexão com o banco executando e passando a string sql como parametro
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                codigoUsuario = rs.getInt("id_usuario");
-            }
-
-            if (modeloUsuario.getId_usuario() == codigoUsuario) {
-                JOptionPane.showMessageDialog(null, "Usuário já cadastrado!");
-            }*/
 
             String endereco = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
@@ -181,11 +160,11 @@ public class ControleUsuario {
             pst.setString(5, modeloEndereco.getBairro());
             pst.executeUpdate();
 
-            // Recupera a id
-            int idEndereco = 0;
+            // Recupera a idEndereco
+            int id_Endereco = 0;
             rs = pst.getGeneratedKeys();
             if (rs.next()) {
-                idEndereco = rs.getInt(1);
+                id_Endereco = rs.getInt(1);
             }
 
             String sql = "insert into usuario (id_usuario,nome_login,senha,perfil,celular,email,id_endereco) values (?,?,?,?,?,?,?)";
@@ -196,7 +175,7 @@ public class ControleUsuario {
             pst.setString(4, modeloUsuario.getPerfil());
             pst.setString(5, modeloUsuario.getCelular());
             pst.setString(6, modeloUsuario.getEmail());
-            pst.setInt(7, idEndereco);
+            pst.setInt(7, id_Endereco);
 
             int adicionado = pst.executeUpdate();
 
@@ -205,7 +184,7 @@ public class ControleUsuario {
             }
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao adicionar o usuário!\nErro: " + ex);
+            JOptionPane.showMessageDialog(null, "Usuáiro já cadastrado!");
         }
         conexaoUsuario.close();
     }
@@ -233,17 +212,38 @@ public class ControleUsuario {
         conexaoUsuario.close();
     }
 
-    private void buscarCodigoDoEndereco(ModeloUsuario modeloUsuario) {
+    private void buscarIdDoEndereco(ModeloUsuario modeloUsuario) {
         this.conexaoUsuario = new Conectar().openConnection();
         String sql = "select * from usuario where id_usuario = '" + modeloUsuario.getId_usuario() + "'";
         try {
             pst = conexaoUsuario.prepareStatement(sql);
             rs = pst.executeQuery();
             if (rs.next()) {
-                codigoEndereco = rs.getInt("id_endereco");
+                idEndereco = rs.getInt("id_endereco");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar o código de endereço!\nErro: " + ex);
         }
+    }
+
+    private void buscarDadosEndereco(ModeloEndereco modeloEndereco) throws SQLException {
+
+        this.conexaoUser = new Conectar().openConnection();
+
+        String sql = "select * from endereco where id_endereco = " + modeloEndereco.getId() + " ";
+        pst = conexaoUser.prepareStatement(sql);
+        rs = pst.executeQuery();
+        try {
+            if (rs.next()) {
+                modelEndereco.setRua(rs.getString("nome_endereco").toUpperCase());
+                modelEndereco.setNumero(rs.getInt("numero"));
+                modelEndereco.setEstado(rs.getString("estado_endereco").toUpperCase());
+                modelEndereco.setCidade(rs.getString("Cidade_endereco").toUpperCase());
+                modelEndereco.setBairro(rs.getString("bairro_endereco").toUpperCase());
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao buscar o código!\nErro: " + ex);
+        }
+        conexaoUser.close();
     }
 }

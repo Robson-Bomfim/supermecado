@@ -24,7 +24,7 @@ public class ControleCliente {
     private Connection conexao = null;
     private PreparedStatement pst;
     private ResultSet rs;
-    private int codigoEndereco;
+    private int idEndereco;
 
     public void adionarCliente(ModeloCliente modeloCliente, ModeloEndereco modeloEndereco) throws SQLException {
         this.conexao = new Conectar().openConnection();
@@ -39,11 +39,11 @@ public class ControleCliente {
             pst.setString(5, modeloEndereco.getBairro());
             pst.executeUpdate();
 
-            // Recupera a id
-            int id = 0;
+            // Recupera a idEndereco
+            int id_Endereco = 0;
             rs = pst.getGeneratedKeys();
             if (rs.next()) {
-                id = rs.getInt(1);
+                id_Endereco = rs.getInt(1);
             }
 
             String sql2 = "insert into cliente (nome_Cliente,telefone_cliente,cpf_cliente,cnpj_cliente,email_cliente,id_endereco) values (?,?,?,?,?,?)";
@@ -53,7 +53,7 @@ public class ControleCliente {
             pst.setString(3, modeloCliente.getCpf());
             pst.setString(4, modeloCliente.getCnpj());
             pst.setString(5, modeloCliente.getEmail());
-            pst.setInt(6, id);
+            pst.setInt(6, id_Endereco);
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
@@ -68,14 +68,14 @@ public class ControleCliente {
     public void atualizarCliente(ModeloCliente modeloCliente, ModeloEndereco modeloEndereco) throws SQLException {
         this.conexao = new Conectar().openConnection();
         try {
-            buscarCodigoDoEndereco(modeloCliente);
+            buscarIdDoEndereco(modeloCliente);//metodo para buscar o id do endereço
             String sql2 = "update cliente set nome_Cliente=?,telefone_cliente=?,cnpj_cliente=?,email_cliente=?,id_endereco=? where cpf_cliente =?";
             pst = conexao.prepareStatement(sql2);
             pst.setString(1, modeloCliente.getNome());
             pst.setString(2, modeloCliente.getTelefone());
             pst.setString(3, modeloCliente.getCnpj());
             pst.setString(4, modeloCliente.getEmail());
-            pst.setInt(5, codigoEndereco);
+            pst.setInt(5, idEndereco);//variável que contém o id do endereço
             pst.setString(6, modeloCliente.getCpf());
             pst.executeUpdate();
 
@@ -86,7 +86,7 @@ public class ControleCliente {
             pst.setString(3, modeloEndereco.getEstado());
             pst.setString(4, modeloEndereco.getCidade());
             pst.setString(5, modeloEndereco.getBairro());
-            pst.setInt(6, codigoEndereco);
+            pst.setInt(6, idEndereco);//variável que contém o id do endereço
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
@@ -139,14 +139,14 @@ public class ControleCliente {
         conexao.close();
     }
 
-    private void buscarCodigoDoEndereco(ModeloCliente modeloCliente) {
+    private void buscarIdDoEndereco(ModeloCliente modeloCliente) {
         this.conexao = new Conectar().openConnection();
         String sql = "select * from cliente where cpf_cliente = '" + modeloCliente.getCpf() + "'";
         try {
             pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
             if (rs.next()) {
-                codigoEndereco = rs.getInt("id_endereco");
+                idEndereco = rs.getInt("id_endereco");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar o código de endereço!\nErro: " + ex);

@@ -101,21 +101,30 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
 
         modeloUsuario.setId_usuario(Integer.parseInt(TextFieldUserCodigo.getText()));
+        ModeloUsuario modelo = controleUsuario.consultar(modeloUsuario);
 
-        controleUsuario.consultar(modeloUsuario);
-
-        //as linhas abaixo "limpam" os campos
-        TextFieldRua.setText(null);
-        TextFieldNumero.setText(null);
-        TextFieldBairro.setText(null);
-        TextFieldCidade.setText(null);
-        TextFieldEstado.setText(null);
-        TextFieldUserNome.setText(null);
-        TextFieldUserCelular.setText(null);
-        TextFieldUserEmail.setText(null);
-        TextFieldUserSenha.setText(null);
-        LabelFoto.setText(null);
-        TextField_Path.setText(null);
+        TextFieldUserNome.setText(String.valueOf(modelo.getNome_login()));
+        TextFieldUserSenha.setText(String.valueOf(modelo.getSenha()));
+        TextFieldUserCelular.setText(String.valueOf(modelo.getCelular()));
+        TextFieldUserEmail.setText(String.valueOf(modelo.getEmail()));
+        ComboBoxUserPerfil.setSelectedItem(String.valueOf(modelo.getPerfil()));
+        TextFieldRua.setText(String.valueOf(modelo.getEndereco().getRua()));
+        TextFieldNumero.setText(String.valueOf(modelo.getEndereco().getNumero()));
+        TextFieldBairro.setText(String.valueOf(modelo.getEndereco().getBairro()));
+        TextFieldCidade.setText(String.valueOf(modelo.getEndereco().getCidade()));
+        TextFieldEstado.setText(String.valueOf(modelo.getEndereco().getEstado()));
+        /*  //as linhas abaixo "limpam" os campos
+            TextFieldRua.setText(null);
+            TextFieldNumero.setText(null);
+            TextFieldBairro.setText(null);
+            TextFieldCidade.setText(null);
+            TextFieldEstado.setText(null);
+            TextFieldUserNome.setText(null);
+            TextFieldUserCelular.setText(null);
+            TextFieldUserEmail.setText(null);
+            TextFieldUserSenha.setText(null);
+            LabelFoto.setText(null);
+            TextField_Path.setText(null);*/
     }
 
     //criando o metodo para alterar usuários
@@ -675,18 +684,18 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JButton ButtonConsultar;
     private javax.swing.JButton Button_Add_Image;
     private javax.swing.JComboBox<String> ComboBoxUserPerfil;
-    private javax.swing.JLabel LabelFoto;
-    private javax.swing.JTextField TextFieldBairro;
-    private javax.swing.JTextField TextFieldCidade;
-    private javax.swing.JTextField TextFieldEstado;
-    private javax.swing.JTextField TextFieldNumero;
-    private javax.swing.JTextField TextFieldRua;
-    private javax.swing.JFormattedTextField TextFieldUserCelular;
+    protected javax.swing.JLabel LabelFoto;
+    protected javax.swing.JTextField TextFieldBairro;
+    protected javax.swing.JTextField TextFieldCidade;
+    protected javax.swing.JTextField TextFieldEstado;
+    protected javax.swing.JTextField TextFieldNumero;
+    protected javax.swing.JTextField TextFieldRua;
+    protected javax.swing.JFormattedTextField TextFieldUserCelular;
     private javax.swing.JTextField TextFieldUserCodigo;
-    private javax.swing.JTextField TextFieldUserEmail;
-    private javax.swing.JTextField TextFieldUserNome;
-    private javax.swing.JTextField TextFieldUserSenha;
-    private javax.swing.JTextField TextField_Path;
+    protected javax.swing.JTextField TextFieldUserEmail;
+    protected javax.swing.JTextField TextFieldUserNome;
+    protected javax.swing.JTextField TextFieldUserSenha;
+    protected javax.swing.JTextField TextField_Path;
     private javax.swing.JLabel campo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
