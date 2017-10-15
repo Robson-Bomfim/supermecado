@@ -16,9 +16,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -614,10 +611,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ButtonApagarActionPerformed
 
     private void ButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonConsultarActionPerformed
-        if (TextFieldUserCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha o campo código!");//se o campo estiver vazio retorna essa mensagem para o usuario
-            return;
-        }
         try {
             // chamando o método consultar
             consultar();
