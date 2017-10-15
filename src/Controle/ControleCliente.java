@@ -21,10 +21,10 @@ import net.proteanit.sql.DbUtils;
 public class ControleCliente {
 
     ModeloEndereco modeloEndereco = new ModeloEndereco();
-    Connection conexao = null;
-    PreparedStatement pst;
-    ResultSet rs;
-    int codigoEndereco;
+    private Connection conexao = null;
+    private PreparedStatement pst;
+    private ResultSet rs;
+    private int codigoEndereco;
 
     public void adionarCliente(ModeloCliente modeloCliente, ModeloEndereco modeloEndereco) throws SQLException {
         this.conexao = new Conectar().openConnection();
@@ -32,7 +32,7 @@ public class ControleCliente {
             String sql = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
             pst = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, modeloEndereco.getNome());
+            pst.setString(1, modeloEndereco.getRua());
             pst.setInt(2, modeloEndereco.getNumero());
             pst.setString(3, modeloEndereco.getEstado());
             pst.setString(4, modeloEndereco.getCidade());
@@ -81,7 +81,7 @@ public class ControleCliente {
 
             String sql = "update endereco set nome_endereco=?,numero=?,estado_endereco=?,Cidade_endereco=?,bairro_endereco=? where id_endereco=?";
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, modeloEndereco.getNome());
+            pst.setString(1, modeloEndereco.getRua());
             pst.setInt(2, modeloEndereco.getNumero());
             pst.setString(3, modeloEndereco.getEstado());
             pst.setString(4, modeloEndereco.getCidade());

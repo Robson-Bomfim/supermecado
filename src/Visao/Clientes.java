@@ -50,8 +50,6 @@ public class Clientes extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        TableCliente = new javax.swing.JTable();
         TextFieldPesquisar = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         Salvar = new javax.swing.JButton();
@@ -83,6 +81,8 @@ public class Clientes extends javax.swing.JInternalFrame {
         TextFieldCnpj = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         ButtonAdicionar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TableCliente = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
@@ -108,34 +108,13 @@ public class Clientes extends javax.swing.JInternalFrame {
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        TableCliente.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        TableCliente.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
-        TableCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        TableCliente.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                TableClienteMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(TableCliente);
-
         TextFieldPesquisar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         TextFieldPesquisar.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        TextFieldPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldPesquisarActionPerformed(evt);
+            }
+        });
         TextFieldPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 TextFieldPesquisarKeyReleased(evt);
@@ -289,6 +268,25 @@ public class Clientes extends javax.swing.JInternalFrame {
             }
         });
 
+        TableCliente.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        TableCliente.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        TableCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableClienteMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TableCliente);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -296,7 +294,6 @@ public class Clientes extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -343,15 +340,9 @@ public class Clientes extends javax.swing.JInternalFrame {
                                 .addGap(2, 2, 2)
                                 .addComponent(TextFieldCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel8))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9)))
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -364,6 +355,16 @@ public class Clientes extends javax.swing.JInternalFrame {
                 .addGap(200, 200, 200)
                 .addComponent(ButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,7 +376,7 @@ public class Clientes extends javax.swing.JInternalFrame {
                         .addComponent(ButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(ButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(124, 124, 124)
+                .addGap(67, 67, 67)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
@@ -410,29 +411,29 @@ public class Clientes extends javax.swing.JInternalFrame {
                     .addComponent(jLabel13)
                     .addComponent(TextFieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(TextFieldPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1003, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -473,22 +474,6 @@ public class Clientes extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Erro ao pesquisar cliente!\nErro: " + ex);
         }
     }//GEN-LAST:event_TextFieldPesquisarKeyReleased
-    // o evento será usado para setar os campos da tablea (clicando com o mause)
-    private void TableClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableClienteMouseClicked
-        // TODO add your handling code here:        
-        setar_campos();
-
-        TextFieldNome.setEnabled(true);
-        TextFieldRua.setEnabled(true);
-        TextFieldNumero.setEnabled(true);
-        FormattedTextFieldTelefone.setEnabled(true);
-        TextFieldEmail.setEnabled(true);
-        TextFieldCnpj.setEnabled(true);
-        TextFieldCPF.setEnabled(true);
-        TextFieldBairro.setEnabled(true);
-        TextFieldCidade.setEnabled(true);
-        TextFieldEstado.setEnabled(true);
-    }//GEN-LAST:event_TableClienteMouseClicked
 
     private void ButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonAlterarActionPerformed
         try {
@@ -534,6 +519,15 @@ public class Clientes extends javax.swing.JInternalFrame {
         TextFieldEmail.setText(null);
     }//GEN-LAST:event_ButtonAdicionarActionPerformed
 
+    private void TextFieldPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldPesquisarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldPesquisarActionPerformed
+
+    private void TableClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableClienteMouseClicked
+        // chamando o metodo setar_campos
+        setar_campos();
+    }//GEN-LAST:event_TableClienteMouseClicked
+
     private void pesquisar_cliente() throws SQLException {
 
         modeloCliente.setPesquisar(TextFieldPesquisar.getText());
@@ -564,7 +558,7 @@ public class Clientes extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios!");//se os campos estiverem vazios retorna essa mensagem para o usuario
             return;
         }
-        modeloEndereco.setNome(TextFieldRua.getText().toUpperCase());
+        modeloEndereco.setRua(TextFieldRua.getText().toUpperCase());
         modeloEndereco.setNumero(Integer.parseInt(TextFieldNumero.getText()));
         modeloEndereco.setBairro(TextFieldBairro.getText().toUpperCase());
         modeloEndereco.setCidade(TextFieldCidade.getText().toUpperCase());
@@ -599,7 +593,7 @@ public class Clientes extends javax.swing.JInternalFrame {
             return;
         }
 
-        modeloEndereco.setNome(TextFieldRua.getText().toUpperCase());
+        modeloEndereco.setRua(TextFieldRua.getText().toUpperCase());
         modeloEndereco.setNumero(Integer.parseInt(TextFieldNumero.getText()));
         modeloEndereco.setBairro(TextFieldBairro.getText().toUpperCase());
         modeloEndereco.setCidade(TextFieldCidade.getText().toUpperCase());

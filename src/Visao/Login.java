@@ -6,28 +6,22 @@
 package Visao;
 
 import Controle.ControleUsuario;
+import Modelo.ModeloUsuario;
 import dao.Conectar;
 import java.sql.Connection;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
 
     Connection conexao = null;//usando a variavel conexão do dal
     ControleUsuario controleUsuario = new ControleUsuario();
+    ModeloUsuario modeloUsuario = new ModeloUsuario();
 
     public Login() {
         initComponents();
         this.conexao = new Conectar().openConnection();
-                
-        // a linha abaixo serve de apoio ao status de conexão
-        //System.out.println(conexao);
-        if (conexao != null) {
-            jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_accept_84521.png")));
-            jLabelStatusLegenda.setText("Conectado");
-        } else {
-            jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_close_36899.png")));
-            jLabelStatusLegenda.setText("Desconectado");
-        }
+        statusDeConexao();
         getRootPane().setDefaultButton(ButtonLogar);
     }
 
@@ -199,10 +193,14 @@ public class Login extends javax.swing.JFrame {
         //a codição abaixo avisa o usuario que um ou mais campos estão sem preencher
         if (TextFieldUsuario.getText().isEmpty() || PasswordField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos antes de Logar!");
-        } else {
-            controleUsuario.logar(TextFieldUsuario, PasswordField);// chamando o metodo logar
-            this.dispose();//fecha a tela de login
         }
+        try {
+            logar();// chamando o metodo logar
+            this.dispose();//fecha a tela de login
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao logar!\nErro: " + ex.getMessage());
+        }
+
     }//GEN-LAST:event_ButtonLogarActionPerformed
 
     private void PasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PasswordFieldActionPerformed
@@ -222,6 +220,24 @@ public class Login extends javax.swing.JFrame {
             ButtonLogar.requestFocus();
         }
     }//GEN-LAST:event_PasswordFieldKeyPressed
+
+    private void logar() throws SQLException {
+        modeloUsuario.setNome_login(TextFieldUsuario.getText());
+        modeloUsuario.setSenha(PasswordField.getText());
+        controleUsuario.logar(modeloUsuario);
+    }
+
+    private void statusDeConexao() {
+        // a linha abaixo serve de apoio ao status de conexão
+        //System.out.println(conexao);
+        if (conexao != null) {
+            jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_accept_84521.png")));
+            jLabelStatusLegenda.setText("Conectado");
+        } else {
+            jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_close_36899.png")));
+            jLabelStatusLegenda.setText("Desconectado");
+        }
+    }
 
     /**
      * @param args the command line arguments

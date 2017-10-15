@@ -5,24 +5,29 @@
  */
 package Modelo;
 
+import Controle.ControleUsuario;
+import java.io.File;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 public class ModeloUsuario {
 
-    private String id_usuario;
+    ControleUsuario controleUsuario = new ControleUsuario();
+    private int id_usuario;
     private String nome_login;
     private String senha;
     private String perfil;
-    private String data_nasc;
     private String celular;
-    private String residencial;
     private String email;
+    private ModeloEndereco endereco;
     private String rota;
-    private String foto;
+    private File foto;
 
-    public String getId_usuario() {
+    public int getId_usuario() {
         return id_usuario;
     }
 
-    public void setId_usuario(String id_usuario) {
+    public void setId_usuario(int id_usuario) {
         this.id_usuario = id_usuario;
     }
 
@@ -50,28 +55,12 @@ public class ModeloUsuario {
         this.perfil = perfil;
     }
 
-    public String getData_nasc() {
-        return data_nasc;
-    }
-
-    public void setData_nasc(String data_nasc) {
-        this.data_nasc = data_nasc;
-    }
-
     public String getCelular() {
         return celular;
     }
 
     public void setCelular(String celular) {
         this.celular = celular;
-    }
-
-    public String getResidencial() {
-        return residencial;
-    }
-
-    public void setResidencial(String residencial) {
-        this.residencial = residencial;
     }
 
     public String getEmail() {
@@ -90,11 +79,19 @@ public class ModeloUsuario {
         this.rota = rota;
     }
 
-    public String getFoto() {
+    public File getFoto() {
         return foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(File foto) {
         this.foto = foto;
+    }
+
+    public ModeloEndereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(ModeloEndereco endereco) {
+        this.endereco = endereco;
     }
 }

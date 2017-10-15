@@ -12,7 +12,7 @@ package Modelo;
 public class ModeloEndereco {
 
     private int id;
-    private String nome;
+    private String rua;
     private int numero;
     private String estado;
     private String cidade;
@@ -24,14 +24,6 @@ public class ModeloEndereco {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public int getNumero() {
@@ -64,6 +56,14 @@ public class ModeloEndereco {
 
     public void setBairro(String bairro) {
         this.bairro = bairro;
+    }
+
+    public String getRua() {
+        return rua;
+    }
+
+    public void setRua(String rua) {
+        this.rua = rua;
     }
     
 }
