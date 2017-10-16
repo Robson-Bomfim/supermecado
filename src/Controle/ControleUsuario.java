@@ -8,6 +8,7 @@ package Controle;
 import Modelo.ModeloEndereco;
 import Modelo.ModeloUsuario;
 import Visao.Home;
+import Visao.TelaUsuario;
 import dao.Conectar;
 import java.awt.Color;
 import java.awt.HeadlessException;
@@ -20,8 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.*;
 
-
-public class ControleUsuario{
+public class ControleUsuario {
     //criando variaveis especiais para conexão com o banco
     //Prepared Statement e ResultSet são framework do pacote java.sql
     //e serve para preparar e executar as instruções sql
@@ -88,7 +88,7 @@ public class ControleUsuario{
 
         try {
             buscarIdDoEndereco(modeloUsuario);//metodo para buscar o id do endereço referente ao usuario correspondente
-            
+
             String sql2 = "update usuario set nome_login=?,senha=?,perfil=?,celular=?,email=?,id_endereco=? where id_usuario=?";
             pst = conexaoUsuario.prepareStatement(sql2);
             pst.setString(1, modeloUsuario.getNome_login().toUpperCase());
@@ -135,10 +135,26 @@ public class ControleUsuario{
                 modeloUsuario.setPerfil(rs.getString("perfil").toUpperCase());// a linha se refere especificamente ao combobox
                 modeloUsuario.setCelular(rs.getString("celular"));
                 modeloUsuario.setEmail(rs.getString("email"));
-                modeloEndereco.setId(rs.getInt("id_endereco"));              
+                modeloEndereco.setId(rs.getInt("id_endereco"));
                 buscarDadosEndereco(modeloEndereco);//metodo para buscar os dados do endereço referente ao seu id
                 modeloUsuario.setEndereco(modelEndereco);
-            } 
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
+                TelaUsuario telaUsuario = new TelaUsuario();
+
+                //as linhas abaixo "limpam" os campos
+                telaUsuario.TextFieldRua.setText(null);
+                telaUsuario.TextFieldNumero.setText(null);
+                telaUsuario.TextFieldBairro.setText(null);
+                telaUsuario.TextFieldCidade.setText(null);
+                telaUsuario.TextFieldEstado.setText(null);
+                telaUsuario.TextFieldUserNome.setText(null);
+                telaUsuario.TextFieldUserCelular.setText(null);
+                telaUsuario.TextFieldUserEmail.setText(null);
+                telaUsuario.TextFieldUserSenha.setText(null);
+                telaUsuario.LabelFoto.setText(null);
+                telaUsuario.TextField_Path.setText(null);
+            }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao consultar o usuário!\nErro: " + ex);
         }
@@ -180,7 +196,7 @@ public class ControleUsuario{
             int adicionado = pst.executeUpdate();
 
             if (adicionado > 0) {
-                JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Usuário " + modeloUsuario.getNome_login() + " adicionado com sucesso!");
             }
 
         } catch (SQLException ex) {

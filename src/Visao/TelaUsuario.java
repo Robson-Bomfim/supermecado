@@ -113,18 +113,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         TextFieldBairro.setText(String.valueOf(modelo.getEndereco().getBairro()));
         TextFieldCidade.setText(String.valueOf(modelo.getEndereco().getCidade()));
         TextFieldEstado.setText(String.valueOf(modelo.getEndereco().getEstado()));
-        /*  //as linhas abaixo "limpam" os campos
-            TextFieldRua.setText(null);
-            TextFieldNumero.setText(null);
-            TextFieldBairro.setText(null);
-            TextFieldCidade.setText(null);
-            TextFieldEstado.setText(null);
-            TextFieldUserNome.setText(null);
-            TextFieldUserCelular.setText(null);
-            TextFieldUserEmail.setText(null);
-            TextFieldUserSenha.setText(null);
-            LabelFoto.setText(null);
-            TextField_Path.setText(null);*/
     }
 
     //criando o metodo para alterar usuários
@@ -684,18 +672,18 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JButton ButtonConsultar;
     private javax.swing.JButton Button_Add_Image;
     private javax.swing.JComboBox<String> ComboBoxUserPerfil;
-    protected javax.swing.JLabel LabelFoto;
-    protected javax.swing.JTextField TextFieldBairro;
-    protected javax.swing.JTextField TextFieldCidade;
-    protected javax.swing.JTextField TextFieldEstado;
-    protected javax.swing.JTextField TextFieldNumero;
-    protected javax.swing.JTextField TextFieldRua;
-    protected javax.swing.JFormattedTextField TextFieldUserCelular;
+    public javax.swing.JLabel LabelFoto;
+    public javax.swing.JTextField TextFieldBairro;
+    public javax.swing.JTextField TextFieldCidade;
+    public javax.swing.JTextField TextFieldEstado;
+    public javax.swing.JTextField TextFieldNumero;
+    public javax.swing.JTextField TextFieldRua;
+    public javax.swing.JFormattedTextField TextFieldUserCelular;
     private javax.swing.JTextField TextFieldUserCodigo;
-    protected javax.swing.JTextField TextFieldUserEmail;
-    protected javax.swing.JTextField TextFieldUserNome;
-    protected javax.swing.JTextField TextFieldUserSenha;
-    protected javax.swing.JTextField TextField_Path;
+    public javax.swing.JTextField TextFieldUserEmail;
+    public javax.swing.JTextField TextFieldUserNome;
+    public javax.swing.JTextField TextFieldUserSenha;
+    public javax.swing.JTextField TextField_Path;
     private javax.swing.JLabel campo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

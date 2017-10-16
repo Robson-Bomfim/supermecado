@@ -550,6 +550,16 @@ public class Clientes extends javax.swing.JInternalFrame {
         TextFieldEstado.setText(TableCliente.getModel().getValueAt(setar, 9).toString());
         //a linha abaixo desabilita o botão salvar
         Salvar.setEnabled(false);
+        TextFieldNome.setEnabled(true);
+        TextFieldRua.setEnabled(true);
+        TextFieldNumero.setEnabled(true);
+        FormattedTextFieldTelefone.setEnabled(true);
+        TextFieldEmail.setEnabled(true);
+        TextFieldCnpj.setEnabled(true);
+        TextFieldCPF.setEnabled(true);
+        TextFieldBairro.setEnabled(true);
+        TextFieldCidade.setEnabled(true);
+        TextFieldEstado.setEnabled(true);
     }
 
     private void salvarCliente() throws SQLException {
