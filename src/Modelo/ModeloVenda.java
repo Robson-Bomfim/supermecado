@@ -5,21 +5,26 @@
  */
 package Modelo;
 
+import java.util.Date;
+
 
 public class ModeloVenda {
-    private int idvenda;
+    private int idVenda;
     private String data;
+    private String pesquisar;
     private float valorVenda;
-    private String nomeCliente;
-    private String nomeProduto;
+    private ModeloCliente Cliente;
+    private ModeloProduto Produto;
     private int valorIten;
+    private int valorTotal;
+    private int quantidade;
 
     public int getIdvenda() {
-        return idvenda;
+        return idVenda;
     }
 
     public void setIdvenda(int idvenda) {
-        this.idvenda = idvenda;
+        this.idVenda = idvenda;
     }
 
     public String getData() {
@@ -38,20 +43,20 @@ public class ModeloVenda {
         this.valorVenda = valorVenda;
     }
 
-    public String getNomeCliente() {
-        return nomeCliente;
+    public ModeloCliente getCliente() {
+        return Cliente;
     }
 
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
+    public void setCliente(ModeloCliente nomeCliente) {
+        this.Cliente = nomeCliente;
     }
 
-    public String getNomeProduto() {
-        return nomeProduto;
+    public ModeloProduto getProduto() {
+        return Produto;
     }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
+    public void setProduto(ModeloProduto nomeProduto) {
+        this.Produto = nomeProduto;
     }
 
     public int getValorIten() {
@@ -60,6 +65,38 @@ public class ModeloVenda {
 
     public void setValorIten(int valorIten) {
         this.valorIten = valorIten;
+    }
+
+    public String getPesquisar() {
+        return pesquisar;
+    }
+
+    public void setPesquisar(String pesquisar) {
+        this.pesquisar = pesquisar;
+    }
+
+    public int getIdVenda() {
+        return idVenda;
+    }
+
+    public void setIdVenda(int idVenda) {
+        this.idVenda = idVenda;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public int getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(int valorTotal) {
+        this.valorTotal = valorTotal;
     }
     
 }

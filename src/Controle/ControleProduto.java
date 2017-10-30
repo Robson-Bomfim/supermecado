@@ -14,11 +14,9 @@ import net.proteanit.sql.DbUtils;
 public class ControleProduto {
 
     private Connection conexao = null;
-    private Connection conexaoFornecedor = null;
     private PreparedStatement pst = null;
     private ResultSet rs = null;
     private int idFornecedor;
-    private String nomefornecedor;
     ModeloProduto modeloProduto = new ModeloProduto();
     ModeloFornecedor modeloFornecedor = new ModeloFornecedor();
 
@@ -37,7 +35,7 @@ public class ControleProduto {
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
-                JOptionPane.showMessageDialog(null, "Produto "+modelo.getNomeProduto().toLowerCase() +" cadastrado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto " + modelo.getNomeProduto().toLowerCase() + " cadastrado com sucesso!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
@@ -48,14 +46,10 @@ public class ControleProduto {
     private void buscarIdDoFornecedor(ModeloProduto modelo) throws SQLException {
         this.conexao = new Conectar().openConnection();
         String sql = "select * from fornecedor where nome_fornecedor = '" + modelo.getFornecedor().getNome() + "'";
-        try {
-            pst = conexao.prepareStatement(sql);
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                idFornecedor = rs.getInt("id_fornecedor");
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao buscar o código!\nErro: " + ex);
+        pst = conexao.prepareStatement(sql);
+        rs = pst.executeQuery();
+        if (rs.next()) {
+            idFornecedor = rs.getInt("id_fornecedor");
         }
     }
 
@@ -74,7 +68,7 @@ public class ControleProduto {
 
             int adicionado = pst.executeUpdate();
             if (adicionado > 0) {
-                JOptionPane.showMessageDialog(null, "Produto "+modelo.getNomeProduto().toLowerCase()+" alterado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto " + modelo.getNomeProduto().toLowerCase() + " alterado com sucesso!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao alterar produto!\nErro: " + ex);
@@ -103,6 +97,30 @@ public class ControleProduto {
 
         String sql = "select  id_produto as 'Código',nome_produto as 'Nome',quantidade as 'Quantidade', valor_custo as 'Valor de Compra', valor_venda as 'Valor de Venda', nome_fornecedor as 'Nome do Fornecedor' \n"
                 + "from produto join fornecedor on fornecedor.id_fornecedor = produto.id_fornecedor  where nome_produto like ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            //passando o conteudo da caixa de pesquisa para o ?
+            //atenção ao "%" - continuação da string sql
+            pst.setString(1, modeloProduto.getPesquisa() + "%");
+            rs = pst.executeQuery();
+            // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
+            TabelaProduto.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        conexao.close();
+    }
+
+    public void pesquisar_produto_cliente(ModeloProduto modeloProduto, JTable TabelaProduto) throws SQLException {
+
+        this.conexao = new Conectar().openConnection();
+
+        String sql = "select produto.id_produto as 'Código do produto',"
+                + " produto.nome_produto as 'Nome do produto', "
+                + "produto.quantidade as 'Quantidade em estoque', "
+                + "produto.valor_venda as 'Valor de venda' "
+                + "from produto\n"
+                + "where produto.nome_produto like ?";
         try {
             pst = conexao.prepareStatement(sql);
             //passando o conteudo da caixa de pesquisa para o ?

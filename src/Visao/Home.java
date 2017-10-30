@@ -5,6 +5,7 @@
  */
 package Visao;
 
+import static Visao.Venda.venda;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,7 +70,7 @@ public class Home extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         TrocaDeUser = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Home");
         setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -338,21 +339,23 @@ public class Home extends javax.swing.JFrame {
 
         Timer time = new Timer(1000, new hora());
         time.start();
-
-
     }//GEN-LAST:event_formWindowActivated
 
     private void MenuOpcaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuOpcaoSairActionPerformed
         // exibe uma caixa de diálogo
-        int trocar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja trocar de usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
-        try {
-            if (trocar == JOptionPane.YES_OPTION) {
-                Login l = new Login();
-                l.setVisible(true);
-                dispose();
+        if (venda == 1) {
+            JOptionPane.showMessageDialog(rootPane, "Primeiro feche o formulário de vendas!");
+        } else {
+            int trocar = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja trocar de usuário?", "Atenção", JOptionPane.YES_NO_OPTION);
+            try {
+                if (trocar == JOptionPane.YES_OPTION) {
+                    Login l = new Login();
+                    l.setVisible(true);
+                    dispose();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }//GEN-LAST:event_MenuOpcaoSairActionPerformed
 
@@ -390,9 +393,9 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         // TODO add your handling code here:
-        String y = Venda.y;
+        int venda = Venda.venda;
         try {
-            if (y == null) {
+            if (venda == 0) {
                 Venda v = new Venda();
                 v.setVisible(true);
                 jDesktopPane1.add(v);
@@ -469,11 +472,15 @@ public class Home extends javax.swing.JFrame {
 
     private void TrocaDeUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TrocaDeUserActionPerformed
         // TODO add your handling code here:
-        int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção", JOptionPane.YES_NO_OPTION);
-        // a condição abaixo valida a escolha do usuário
-        if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
-        {
-            System.exit(0);//sai do sistem
+        if (venda == 1) {
+            JOptionPane.showMessageDialog(rootPane, "Primeiro feche o formulário de vendas!");
+        } else {
+            int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Atenção", JOptionPane.YES_NO_OPTION);
+            // a condição abaixo valida a escolha do usuário
+            if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
+            {
+                System.exit(0);//sai do sistem
+            }
         }
     }//GEN-LAST:event_TrocaDeUserActionPerformed
 
@@ -503,16 +510,24 @@ public class Home extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

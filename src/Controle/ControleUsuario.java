@@ -8,7 +8,6 @@ package Controle;
 import Modelo.ModeloEndereco;
 import Modelo.ModeloUsuario;
 import Visao.Home;
-import Visao.TelaUsuario;
 import dao.Conectar;
 import java.awt.Color;
 import java.awt.HeadlessException;
@@ -31,6 +30,7 @@ public class ControleUsuario {
     private ResultSet rs = null;
     private PreparedStatement pst = null;
     private int idEndereco;
+    public boolean flag = false;
     ModeloEndereco modeloEndereco = new ModeloEndereco();
     ModeloEndereco modelEndereco = new ModeloEndereco();
 
@@ -75,6 +75,7 @@ public class ControleUsuario {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário e/ou Senha Inválido(s)!");
+                flag = true;
             }
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -138,30 +139,15 @@ public class ControleUsuario {
                 modeloEndereco.setId(rs.getInt("id_endereco"));
                 buscarDadosEndereco(modeloEndereco);//metodo para buscar os dados do endereço referente ao seu id
                 modeloUsuario.setEndereco(modelEndereco);
-            } else {
-                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
-                TelaUsuario telaUsuario = new TelaUsuario();
-
-                //as linhas abaixo "limpam" os campos
-                telaUsuario.TextFieldRua.setText(null);
-                telaUsuario.TextFieldNumero.setText(null);
-                telaUsuario.TextFieldBairro.setText(null);
-                telaUsuario.TextFieldCidade.setText(null);
-                telaUsuario.TextFieldEstado.setText(null);
-                telaUsuario.TextFieldUserNome.setText(null);
-                telaUsuario.TextFieldUserCelular.setText(null);
-                telaUsuario.TextFieldUserEmail.setText(null);
-                telaUsuario.TextFieldUserSenha.setText(null);
-                telaUsuario.LabelFoto.setText(null);
-                telaUsuario.TextField_Path.setText(null);
+                flag = true;
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao consultar o usuário!\nErro: " + ex);
+            JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
         }
         conexaoUsuario.close();
         return modeloUsuario;
     }
-
+    
     public void adicionarUsuario(ModeloUsuario modeloUsuario, ModeloEndereco modeloEndereco) throws SQLException {//metodo para adicionar usuário
         this.conexaoUsuario = new Conectar().openConnection();
         try {

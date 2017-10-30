@@ -29,8 +29,8 @@ public class Clientes extends javax.swing.JInternalFrame {
     public Clientes() {
         this.conexao = new Conectar().openConnection();
         initComponents();
-        obrigatorios();
-        y = "y";
+        this.obrigatorios();
+        this.y = "y";
     }
 
     public final void obrigatorios() {
@@ -453,6 +453,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         try {
             // TODO add your handling code here:
             salvarCliente();
+            pesquisar_cliente();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar cliente!\nErro: " + ex);
         }
@@ -535,7 +536,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     }
 
     //metodo para setar os campos do formulario com o conteudo da tabela
-    public void setar_campos() {
+    private void setar_campos() {
         int setar = TableCliente.getSelectedRow();
 
         TextFieldNome.setText(TableCliente.getModel().getValueAt(setar, 0).toString());

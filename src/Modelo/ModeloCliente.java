@@ -8,6 +8,7 @@ package Modelo;
 public class ModeloCliente {
 
     
+    private String id;
     private String cpf;
     private String nome;
     private ModeloEndereco endereco;
@@ -72,6 +73,14 @@ public class ModeloCliente {
 
     public void setPesquisar(String pesquisar) {
         this.pesquisar = pesquisar;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
     
 }

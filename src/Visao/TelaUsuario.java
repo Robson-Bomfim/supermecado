@@ -79,18 +79,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         controleUsuario.adicionarUsuario(modeloUsuario, modeloEndereco);
 
-        //as linhas abaixo "limpam" os campos
-        TextFieldRua.setText(null);
-        TextFieldNumero.setText(null);
-        TextFieldBairro.setText(null);
-        TextFieldCidade.setText(null);
-        TextFieldEstado.setText(null);
-        TextFieldUserNome.setText(null);
-        TextFieldUserCelular.setText(null);
-        TextFieldUserEmail.setText(null);
-        TextFieldUserSenha.setText(null);
-        LabelFoto.setText(null);
-        TextField_Path.setText(null);
+        //chamando o metodo "limpam" os campos
+        limpaCampos();
     }
 
     private void consultar() throws SQLException {
@@ -103,6 +93,12 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         modeloUsuario.setId_usuario(Integer.parseInt(TextFieldUserCodigo.getText()));
         ModeloUsuario modelo = controleUsuario.consultar(modeloUsuario);
 
+        if (controleUsuario.flag == false) {
+            JOptionPane.showMessageDialog(null, "Usuário de código " + TextFieldUserCodigo.getText() + " ainda não está cadastrado!");
+            //chamando o metodo "limpam" os campos
+            limpaCampos();
+            return;
+        }
         TextFieldUserNome.setText(String.valueOf(modelo.getNome_login()));
         TextFieldUserSenha.setText(String.valueOf(modelo.getSenha()));
         TextFieldUserCelular.setText(String.valueOf(modelo.getCelular()));
@@ -113,6 +109,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         TextFieldBairro.setText(String.valueOf(modelo.getEndereco().getBairro()));
         TextFieldCidade.setText(String.valueOf(modelo.getEndereco().getCidade()));
         TextFieldEstado.setText(String.valueOf(modelo.getEndereco().getEstado()));
+        controleUsuario.flag = false;
     }
 
     //criando o metodo para alterar usuários
@@ -141,18 +138,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         controleUsuario.atualizarUsuario(modeloUsuario, modeloEndereco);
 
-        //as linhas abaixo "limpam" os campos
-        TextFieldRua.setText(null);
-        TextFieldNumero.setText(null);
-        TextFieldBairro.setText(null);
-        TextFieldCidade.setText(null);
-        TextFieldEstado.setText(null);
-        TextFieldUserNome.setText(null);
-        TextFieldUserCelular.setText(null);
-        TextFieldUserEmail.setText(null);
-        TextFieldUserSenha.setText(null);
-        LabelFoto.setText(null);
-        TextField_Path.setText(null);
+        //chamando o metodo "limpam" os campos
+        limpaCampos();
     }
 
 //metodo para remoção de usuários
@@ -169,19 +156,23 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             modeloUsuario.setId_usuario(Integer.parseInt(TextFieldUserCodigo.getText()));
             controleUsuario.excluirUsuario(modeloUsuario);
 
-            //as linhas abaixo "limpam" os campos
-            TextFieldRua.setText(null);
-            TextFieldNumero.setText(null);
-            TextFieldBairro.setText(null);
-            TextFieldCidade.setText(null);
-            TextFieldEstado.setText(null);
-            TextFieldUserNome.setText(null);
-            TextFieldUserCelular.setText(null);
-            TextFieldUserEmail.setText(null);
-            TextFieldUserSenha.setText(null);
-            LabelFoto.setText(null);
-            TextField_Path.setText(null);
+            //chamando o metodo "limpam" os campos
+            limpaCampos();
         }
+    }
+
+    private void limpaCampos() {
+        TextFieldRua.setText(null);
+        TextFieldNumero.setText(null);
+        TextFieldBairro.setText(null);
+        TextFieldCidade.setText(null);
+        TextFieldEstado.setText(null);
+        TextFieldUserNome.setText(null);
+        TextFieldUserCelular.setText(null);
+        TextFieldUserEmail.setText(null);
+        TextFieldUserSenha.setText(null);
+        LabelFoto.setText(null);
+        TextField_Path.setText(null);
     }
 
     /**
@@ -595,7 +586,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
     private void TextFieldUserEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldUserEmailActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_TextFieldUserEmailActionPerformed
 
     private void ButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonApagarActionPerformed

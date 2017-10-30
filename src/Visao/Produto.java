@@ -345,6 +345,7 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando metodo salvar
             salvarProduto();
+            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
         }
@@ -387,14 +388,14 @@ public class Produto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ComboBoxFornecedorActionPerformed
 
     private void excluir() throws SQLException {
-        
-                // condiçao para verificar se os campos estão vazios
+
+        // condiçao para verificar se os campos estão vazios
         if (TextFieldCodigo.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
             JOptionPane.showMessageDialog(null, "Selecione o Produto!");//se o campo estiver vazio retorna essa mensagem para o usuario
             return;
         }
 
-        int excluir = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o produto "+TextFieldProduto.getText().toLowerCase()+" ?", "Atenção", JOptionPane.YES_NO_OPTION);
+        int excluir = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o produto " + TextFieldProduto.getText().toLowerCase() + " ?", "Atenção", JOptionPane.YES_NO_OPTION);
         // a condição abaixo valida a escolha do usuário
         if (excluir == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
         {
