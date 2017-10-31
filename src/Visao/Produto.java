@@ -355,6 +355,7 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando o metodo excluir
             excluir();
+            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao excluir produto!\nErro: " + ex);
         }
@@ -364,6 +365,7 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando o metodo alterar
             alterar();
+            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao alterar produto!\nErro: " + ex);
         }

@@ -15,8 +15,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Venda extends javax.swing.JInternalFrame {
@@ -31,13 +29,13 @@ public class Venda extends javax.swing.JInternalFrame {
     private boolean flag = false;
     public static int idProduto;
     private float valorTotal;
-    private int quantidade;
+    private int quantidadeEstoque;
 
     public Venda() throws SQLException {
         initComponents();
         this.conexao = new Conectar().openConnection();
-        this.registroDeVenda();
         this.dataDaCompra();
+        this.registroDeVenda();
         this.venda = 1;
     }
 
@@ -74,21 +72,22 @@ public class Venda extends javax.swing.JInternalFrame {
     private void setar_campos_cliente() {
         int setar = TablePesquisa.getSelectedRow();
         TextFieldNomeCiente.setText(TablePesquisa.getModel().getValueAt(setar, 1).toString());
+        TextFieldProduto.requestFocus();
     }
 
     private void setar_campos_produto() {
         int setar = TablePesquisa.getSelectedRow();
-        TextFieldQuantidade.setText("1");
         idProduto = (int) TablePesquisa.getModel().getValueAt(setar, 0);
         TextFieldProduto.setText(TablePesquisa.getModel().getValueAt(setar, 1).toString());
-        quantidade = (int) TablePesquisa.getModel().getValueAt(setar, 2);
-        //TextFieldValorItem.setText("R$");
+        quantidadeEstoque = (int) TablePesquisa.getModel().getValueAt(setar, 2);
         TextFieldValorItem.setText(TablePesquisa.getModel().getValueAt(setar, 3).toString());
+        TextFieldQuantidade.requestFocus();
     }
 
     private void registroDeVenda() throws SQLException {
         modeloCliente.setNome(TextFieldNomeCiente.getText());
         modeloVenda.setCliente(modeloCliente);
+        modeloVenda.setData(FormattedTextFieldDataVenda.getText());
         controleVenda.registroVenda(modeloVenda);
     }
 
@@ -104,6 +103,25 @@ public class Venda extends javax.swing.JInternalFrame {
     private void excluir() throws SQLException {
         modeloVenda.setIdVenda(controleVenda.getId_venda());
         controleVenda.excluirVenda(modeloVenda);
+    }
+
+    private void finalizarVenda() throws SQLException {
+        if (TextFieldValorTotal.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Primeiro adicione a lista o(s) produto(s) desejado(s)!");
+            TextFieldNomeCiente.requestFocus();
+            return;
+        }
+        modeloVenda.setData(FormattedTextFieldDataVenda.getText());
+        modeloVenda.setValorVenda(Float.parseFloat(TextFieldValorTotal.getText()));
+        modeloCliente.setNome(TextFieldNomeCiente.getText());
+        modeloVenda.setCliente(modeloCliente);
+        controleVenda.updateVenda(modeloVenda);
+        this.dispose();//fecha o formulário de vendas
+    }
+
+    private void calcularValorCompra() {
+        valorTotal += Float.parseFloat(TextFieldValorItem.getText()) * Integer.parseInt(TextFieldQuantidade.getText());
+        TextFieldValorTotal.setText(String.valueOf(this.valorTotal));
     }
 
     /**
@@ -184,7 +202,7 @@ public class Venda extends javax.swing.JInternalFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel2.setText("Produto:");
+        jLabel2.setText("Nome do produto:");
 
         TextFieldProduto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         TextFieldProduto.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -219,7 +237,7 @@ public class Venda extends javax.swing.JInternalFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel4.setText("Valor por item:");
+        jLabel4.setText("Valor por item/kg:");
 
         TextFieldValorItem.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
 
@@ -368,9 +386,7 @@ public class Venda extends javax.swing.JInternalFrame {
                                 .addComponent(TextFieldValorItem, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addGap(47, 47, 47))
+                                .addComponent(jLabel5)
                                 .addComponent(FormattedTextFieldDataVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(ButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -544,14 +560,15 @@ public class Venda extends javax.swing.JInternalFrame {
             FormattedTextFieldDataVenda.requestFocus();
             return;
         }
-        if (quantidade >= Integer.parseInt(TextFieldQuantidade.getText()) && Integer.parseInt(TextFieldQuantidade.getText()) >= 1) {
+        // a condiçao abaixo trata o erro comparando a condiçao requisitada com a quantidade em estoque
+        if (quantidadeEstoque >= Integer.parseInt(TextFieldQuantidade.getText())
+                && Integer.parseInt(TextFieldQuantidade.getText()) >= 1) {
             try {
-                // TODO add your handling code here: 
-                valorTotal += Float.parseFloat(TextFieldValorItem.getText()) * Integer.parseInt(TextFieldQuantidade.getText());
-                TextFieldValorTotal.setText(String.valueOf(this.valorTotal));
-                this.adicionar();
-                this.pesquisar_itens_venda();
-                this.pesquisar_cliente_produto();
+                this.calcularValorCompra();//chamando o metodo "calcularValorCompra" para fazer o calculo da compra final
+                this.adicionar();//chamando o metodo "adicionar" para adicionar um produto a lista de compras
+                this.pesquisar_itens_venda();//chamando o metodo "pesquisar_itens_venda" para listar os produtos adicionado
+                this.pesquisar_cliente_produto();//chamando o metodo "pesquisar_cliente_produto" para atualizar a quantidade
+                TextFieldProduto.requestFocus();//dando focu no campo produto para continuar a adicionar produtos
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
@@ -568,14 +585,10 @@ public class Venda extends javax.swing.JInternalFrame {
     private void ButtonFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonFinalizarVendaActionPerformed
         // TODO add your handling code here:
         try {
-            modeloVenda.setData(FormattedTextFieldDataVenda.getText());
-            modeloVenda.setValorVenda(Float.parseFloat(TextFieldValorTotal.getText()));
-            modeloCliente.setNome(TextFieldNomeCiente.getText());
-            modeloVenda.setCliente(modeloCliente);
-
-            controleVenda.updateVenda(modeloVenda);
+            finalizarVenda();//chamando o método finalizarVenda
+            venda = 0;//variavel que define o formulario de venda fechado
         } catch (SQLException ex) {
-            Logger.getLogger(Venda.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_ButtonFinalizarVendaActionPerformed
 
@@ -591,13 +604,13 @@ public class Venda extends javax.swing.JInternalFrame {
             // a condição abaixo valida a escolha do usuário
             if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
             {
-                //sai do formulario venda           
+                //sai do formulario venda  
                 this.excluir();
                 this.dispose();
-                venda = 0;
+                venda = 0;//variavel que define o formulario de venda fechado
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_ButtonCancelarVendaActionPerformed
 
