@@ -60,13 +60,14 @@ public class ControleUsuario {
                     Home.MenuUsuario.setEnabled(true);
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
-                    Home.LabelTipoUser.setForeground(Color.RED);
+                    Home.LabelTipoUser.setForeground(Color.RED);//seta a cor vermelha no nome do usuario
 
                     pst.close();
                 } else if (perfil.equalsIgnoreCase("User")) {
                     Home h = new Home();//estância da tela principal
                     Home.LabelTipoUser.setText(rs.getString(4));//aqui seta o tipo do usuario conforme o banco de dados
                     Home.LblUsuario.setText(rs.getString(2));//aqui seta o usuario logado conforme o banco de dados
+                    Home.LabelTipoUser.setForeground(Color.RED);//seta a cor vermelha no nome do usuario
                     h.setVisible(true);// chama a tela principal  */    
 
                     pst.close();
@@ -75,7 +76,7 @@ public class ControleUsuario {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário e/ou Senha Inválido(s)!");
-                flag = true;
+                flag = true;//flag que, se for "true", é chamada no formulario Login não permitindo o formulario fechar 
             }
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -83,7 +84,7 @@ public class ControleUsuario {
         conexaoUsuario.close();
     }
 
-    public void atualizarUsuario(ModeloUsuario modeloUsuario, ModeloEndereco modeloEndereco) throws SQLException {
+    public void atualizarUsuario(ModeloUsuario modeloUsuario) throws SQLException {
 
         this.conexaoUsuario = new Conectar().openConnection();
 
@@ -103,11 +104,11 @@ public class ControleUsuario {
 
             String sql = "update endereco set nome_endereco=?,numero=?,estado_endereco=?,Cidade_endereco=?,bairro_endereco=? where id_endereco=?";
             pst = conexaoUsuario.prepareStatement(sql);
-            pst.setString(1, modeloEndereco.getRua());
-            pst.setInt(2, modeloEndereco.getNumero());
-            pst.setString(3, modeloEndereco.getEstado());
-            pst.setString(4, modeloEndereco.getCidade());
-            pst.setString(5, modeloEndereco.getBairro());
+            pst.setString(1, modeloUsuario.getEndereco().getRua());
+            pst.setInt(2, modeloUsuario.getEndereco().getNumero());
+            pst.setString(3, modeloUsuario.getEndereco().getEstado());
+            pst.setString(4, modeloUsuario.getEndereco().getCidade());
+            pst.setString(5, modeloUsuario.getEndereco().getBairro());
             pst.setInt(6, idEndereco);//variável que contém o id do endereço correspondente
 
             int adicionado = pst.executeUpdate();
@@ -148,18 +149,18 @@ public class ControleUsuario {
         return modeloUsuario;
     }
     
-    public void adicionarUsuario(ModeloUsuario modeloUsuario, ModeloEndereco modeloEndereco) throws SQLException {//metodo para adicionar usuário
+    public void adicionarUsuario(ModeloUsuario modeloUsuario) throws SQLException {//metodo para adicionar usuário
         this.conexaoUsuario = new Conectar().openConnection();
         try {
 
             String endereco = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
             pst = conexaoUsuario.prepareStatement(endereco, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, modeloEndereco.getRua());
-            pst.setInt(2, modeloEndereco.getNumero());
-            pst.setString(3, modeloEndereco.getEstado());
-            pst.setString(4, modeloEndereco.getCidade());
-            pst.setString(5, modeloEndereco.getBairro());
+            pst.setString(1, modeloUsuario.getEndereco().getRua());
+            pst.setInt(2, modeloUsuario.getEndereco().getNumero());
+            pst.setString(3, modeloUsuario.getEndereco().getEstado());
+            pst.setString(4, modeloUsuario.getEndereco().getCidade());
+            pst.setString(5, modeloUsuario.getEndereco().getBairro());
             pst.executeUpdate();
 
             // Recupera a idEndereco

@@ -9,7 +9,6 @@ import Controle.ControleCliente;
 import Modelo.ModeloCliente;
 import Modelo.ModeloEndereco;
 import dao.Conectar;
-import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -397,7 +396,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         try {
             // TODO add your handling code here:
             salvarCliente();
-            pesquisar_cliente();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar cliente!\nErro: " + ex);
         }
@@ -414,7 +412,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     private void TextFieldPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldPesquisarKeyReleased
         try {
             // TODO add your handling code here:
-            pesquisar_cliente();
+            pesquisarCliente();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao pesquisar cliente!\nErro: " + ex);
         }
@@ -424,7 +422,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         try {
             // TODO add your handling code here:
             atualizarCliente();
-            pesquisar_cliente();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar cliente!\nErro: " + ex);
         }
@@ -434,7 +431,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         try {
             // TODO add your handling code here:
             ExcluirCliente();
-            pesquisar_cliente();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao remover cliente!\nErro: " + ex);
         }
@@ -454,7 +450,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         setarCamposCliente();
     }//GEN-LAST:event_TableClienteMouseClicked
 
-    private void pesquisar_cliente() throws SQLException {
+    private void pesquisarCliente() throws SQLException {
 
         modeloCliente.setPesquisar(TextFieldPesquisar.getText());
         controleCliente.pesquisar_cliente(modeloCliente, TableCliente);
@@ -535,7 +531,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         modeloCliente.setCpf(FormattedTextFieldCPF.getText());
         modeloCliente.setEmail(TextFieldEmail.getText());
 
-        controleCliente.adionarCliente(modeloCliente, modeloEndereco);
+        controleCliente.adionarCliente(modeloCliente);
 
         //as linhas abaixo "limpam" os campos
         TextFieldNome.setText(null);
@@ -547,9 +543,10 @@ public class Clientes extends javax.swing.JInternalFrame {
         TextFieldCidade.setText(null);
         TextFieldBairro.setText(null);
         TextFieldEmail.setText(null);
+        pesquisarCliente();
     }
-    //criando o metodo para alterar usuários
 
+    //criando o metodo para alterar clientes
     private void atualizarCliente() throws SQLException {
         //validaçao dos campos obrigatórios
         if (TextFieldNome.getText().isEmpty()) {
@@ -601,7 +598,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         modeloCliente.setCpf(FormattedTextFieldCPF.getText());
         modeloCliente.setEmail(TextFieldEmail.getText());
 
-        controleCliente.atualizarCliente(modeloCliente, modeloEndereco);
+        controleCliente.atualizarCliente(modeloCliente);
 
         //as linhas abaixo "limpam" os campos
         TextFieldNome.setText(null);
@@ -625,6 +622,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         TextFieldBairro.setEnabled(!true);
         TextFieldCidade.setEnabled(!true);
         TextFieldEstado.setEnabled(!true);
+        pesquisarCliente();
     }
 
     private void ExcluirCliente() throws SQLException {

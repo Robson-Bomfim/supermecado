@@ -12,6 +12,7 @@ public class ModeloFornecedor {
     private String cnpj;
     private String email;
     private String telefone;
+    private String pesquisar;
     private ModeloEndereco endereco; 
 
     public int getId() {
@@ -60,6 +61,14 @@ public class ModeloFornecedor {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getPesquisar() {
+        return pesquisar;
+    }
+
+    public void setPesquisar(String pesquisar) {
+        this.pesquisar = pesquisar;
     }
     
 }

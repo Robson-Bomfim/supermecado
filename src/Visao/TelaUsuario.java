@@ -77,7 +77,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         modeloUsuario.setRota(TextField_Path.getText());
         //modeloUsuario.setFoto(LabelFoto);
 
-        controleUsuario.adicionarUsuario(modeloUsuario, modeloEndereco);
+        controleUsuario.adicionarUsuario(modeloUsuario);
 
         //chamando o metodo "limpam" os campos
         limpaCampos();
@@ -136,7 +136,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         modeloUsuario.setPerfil((String) ComboBoxUserPerfil.getSelectedItem());
         modeloUsuario.setRota(TextField_Path.getText());
 
-        controleUsuario.atualizarUsuario(modeloUsuario, modeloEndereco);
+        controleUsuario.atualizarUsuario(modeloUsuario);
 
         //chamando o metodo "limpam" os campos
         limpaCampos();

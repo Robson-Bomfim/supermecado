@@ -5,17 +5,14 @@
  */
 package Modelo;
 
-import java.util.Date;
-
-
 public class ModeloVenda {
     private int idVenda;
     private String data;
     private String pesquisar;
-    private float valorVenda;
+    private double valorVenda;
     private ModeloCliente Cliente;
     private ModeloProduto Produto;
-    private int valorIten;
+    private double valorIten;
     private int valorTotal;
     private int quantidade;
 
@@ -35,11 +32,11 @@ public class ModeloVenda {
         this.data = data;
     }
 
-    public float getValorVenda() {
+    public double getValorVenda() {
         return valorVenda;
     }
 
-    public void setValorVenda(float valorVenda) {
+    public void setValorVenda(double valorVenda) {
         this.valorVenda = valorVenda;
     }
 
@@ -59,11 +56,11 @@ public class ModeloVenda {
         this.Produto = nomeProduto;
     }
 
-    public int getValorIten() {
+    public double getValorIten() {
         return valorIten;
     }
 
-    public void setValorIten(int valorIten) {
+    public void setValorIten(double valorIten) {
         this.valorIten = valorIten;
     }
 
@@ -73,14 +70,6 @@ public class ModeloVenda {
 
     public void setPesquisar(String pesquisar) {
         this.pesquisar = pesquisar;
-    }
-
-    public int getIdVenda() {
-        return idVenda;
-    }
-
-    public void setIdVenda(int idVenda) {
-        this.idVenda = idVenda;
     }
 
     public int getQuantidade() {

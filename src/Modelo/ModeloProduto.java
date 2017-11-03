@@ -10,8 +10,8 @@ public class ModeloProduto {
     private int idProduto;
     private String nomeProduto;
     private String pesquisa;
-    private float precoCompra;
-    private float precoVenda;
+    private double precoCompra;
+    private double precoVenda;
     private int quantidadeProduto;
     private ModeloFornecedor Fornecedor;
 
@@ -31,19 +31,19 @@ public class ModeloProduto {
         this.nomeProduto = nomeProduto;
     }
 
-    public float getPrecoCompra() {
+    public double getPrecoCompra() {
         return precoCompra;
     }
 
-    public void setPrecoCompra(float precoCompra) {
+    public void setPrecoCompra(double precoCompra) {
         this.precoCompra = precoCompra;
     }
 
-    public float getPrecoVenda() {
+    public double getPrecoVenda() {
         return precoVenda;
     }
 
-    public void setPrecoVenda(float precoVenda) {
+    public void setPrecoVenda(double precoVenda) {
         this.precoVenda = precoVenda;
     }
 

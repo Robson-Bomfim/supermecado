@@ -197,8 +197,8 @@ public class Login extends javax.swing.JFrame {
         }
         try {
             logar();// chamando o metodo logar
-            if (controleUsuario.flag == true) {
-                return;
+            if (controleUsuario.flag == true) {//condiçao que permite o formulario "Login" ficar aberto
+                return;                        //caso o usuario erre a "senha ou usuario" 
             }
             this.dispose();//fecha a tela de login
         } catch (SQLException ex) {

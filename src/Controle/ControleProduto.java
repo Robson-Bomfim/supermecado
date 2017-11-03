@@ -29,8 +29,8 @@ public class ControleProduto {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, modelo.getNomeProduto());
             pst.setInt(2, modelo.getQuantidadeProduto());
-            pst.setFloat(3, modelo.getPrecoCompra());
-            pst.setFloat(4, modelo.getPrecoVenda());
+            pst.setDouble(3, modelo.getPrecoCompra());
+            pst.setDouble(4, modelo.getPrecoVenda());
             pst.setInt(5, idFornecedor);//variável contém o id do fornecedor
 
             int adicionado = pst.executeUpdate();
@@ -61,8 +61,8 @@ public class ControleProduto {
                     + "valor_custo=?,valor_venda=?,id_fornecedor=? where id_produto=?");
             pst.setString(1, modelo.getNomeProduto());
             pst.setInt(2, modelo.getQuantidadeProduto());
-            pst.setFloat(3, modelo.getPrecoCompra());
-            pst.setFloat(4, modelo.getPrecoVenda());
+            pst.setDouble(3, modelo.getPrecoCompra());
+            pst.setDouble(4, modelo.getPrecoVenda());
             pst.setInt(5, idFornecedor);//variável que contém o id do fornecedor
             pst.setInt(6, modelo.getIdProduto());
 

@@ -345,7 +345,6 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando metodo salvar
             salvarProduto();
-            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao inserir o produto!\nErro: " + ex);
         }
@@ -355,7 +354,6 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando o metodo excluir
             excluir();
-            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao excluir produto!\nErro: " + ex);
         }
@@ -365,7 +363,6 @@ public class Produto extends javax.swing.JInternalFrame {
         try {
             // chamando o metodo alterar
             alterar();
-            pesquisar_Produto();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao alterar produto!\nErro: " + ex);
         }
@@ -418,14 +415,28 @@ public class Produto extends javax.swing.JInternalFrame {
             TextFieldPrecoV.setText(null);
             TextFieldProduto.setText(null);
             TextFieldQuantidade.setText(null);
+            pesquisar_Produto();
         }
     }
 
     private void alterar() throws SQLException {
 
         // condiçao para verificar se os campos estão vazios
-        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
+        if (TextFieldProduto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo produto.");
+            TextFieldProduto.requestFocus();
+            return;
+        } else if (TextFieldQuantidade.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo quantidade.");
+            TextFieldQuantidade.requestFocus();
+            return;
+        } else if (TextFieldPrecoC.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo preço de compra.");
+            TextFieldPrecoC.requestFocus();
+            return;
+        } else if (TextFieldPrecoV.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo preço de venda.");
+            TextFieldPrecoV.requestFocus();
             return;
         }
 
@@ -433,8 +444,8 @@ public class Produto extends javax.swing.JInternalFrame {
         modelofornecedor.setNome((String) ComboBoxFornecedor.getSelectedItem());
         modeloProduto.setFornecedor(modelofornecedor);
         modeloProduto.setNomeProduto(TextFieldProduto.getText().toUpperCase());
-        modeloProduto.setPrecoCompra(Float.parseFloat(TextFieldPrecoC.getText()));
-        modeloProduto.setPrecoVenda(Float.parseFloat(TextFieldPrecoV.getText()));
+        modeloProduto.setPrecoCompra(Double.parseDouble(TextFieldPrecoC.getText()));
+        modeloProduto.setPrecoVenda(Double.parseDouble(TextFieldPrecoV.getText()));
         modeloProduto.setQuantidadeProduto(Integer.parseInt(TextFieldQuantidade.getText()));
         controleProduto.alterProduto(modeloProduto);
 
@@ -451,12 +462,27 @@ public class Produto extends javax.swing.JInternalFrame {
         TextFieldPrecoV.setText(null);
         TextFieldProduto.setText(null);
         TextFieldQuantidade.setText(null);
+        pesquisar_Produto();
     }
 
     private void salvarProduto() throws SQLException {
 
-        if (TextFieldProduto.getText().isEmpty() || TextFieldPrecoC.getText().isEmpty() || TextFieldPrecoV.getText().isEmpty() || TextFieldQuantidade.getText().isEmpty()) {//validaçao do campo "codigo" que é obrigatório para fazer a cunsulta
-            JOptionPane.showMessageDialog(null, "Preencha os campos!");//se o campo estiver vazio retorna essa mensagem para o usuario
+        // condiçao para verificar se os campos estão vazios
+        if (TextFieldProduto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo produto.");
+            TextFieldProduto.requestFocus();
+            return;
+        } else if (TextFieldQuantidade.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo quantidade.");
+            TextFieldQuantidade.requestFocus();
+            return;
+        } else if (TextFieldPrecoC.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo preço de compra.");
+            TextFieldPrecoC.requestFocus();
+            return;
+        } else if (TextFieldPrecoV.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo preço de venda.");
+            TextFieldPrecoV.requestFocus();
             return;
         }
 
@@ -482,6 +508,7 @@ public class Produto extends javax.swing.JInternalFrame {
         TextFieldPrecoV.setText(null);
         TextFieldProduto.setText(null);
         TextFieldQuantidade.setText(null);
+        pesquisar_Produto();
     }
 
     private void pesquisar_Produto() throws SQLException {
@@ -510,6 +537,7 @@ public class Produto extends javax.swing.JInternalFrame {
 
         TextFieldCodigo.setText(TabelaProduto.getModel().getValueAt(setar, 0).toString());
         TextFieldProduto.setText(TabelaProduto.getModel().getValueAt(setar, 1).toString());
+        TextFieldPesquisar.setText(TabelaProduto.getModel().getValueAt(setar, 1).toString());
         TextFieldQuantidade.setText(TabelaProduto.getModel().getValueAt(setar, 2).toString());
         TextFieldPrecoC.setText(TabelaProduto.getModel().getValueAt(setar, 3).toString());
         TextFieldPrecoV.setText(TabelaProduto.getModel().getValueAt(setar, 4).toString());

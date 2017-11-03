@@ -7,7 +7,6 @@ package Controle;
 
 import Modelo.ModeloCliente;
 import Modelo.ModeloEndereco;
-import Modelo.ModeloVenda;
 import dao.Conectar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,17 +26,17 @@ public class ControleCliente {
     private ResultSet rs;
     private int idEndereco;
 
-    public void adionarCliente(ModeloCliente modeloCliente, ModeloEndereco modeloEndereco) throws SQLException {
+    public void adionarCliente(ModeloCliente modeloCliente) throws SQLException {
         this.conexao = new Conectar().openConnection();
         try {
             String sql = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
             pst = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, modeloEndereco.getRua());
-            pst.setInt(2, modeloEndereco.getNumero());
-            pst.setString(3, modeloEndereco.getEstado());
-            pst.setString(4, modeloEndereco.getCidade());
-            pst.setString(5, modeloEndereco.getBairro());
+            pst.setString(1, modeloCliente.getEndereco().getRua());
+            pst.setInt(2, modeloCliente.getEndereco().getNumero());
+            pst.setString(3, modeloCliente.getEndereco().getEstado());
+            pst.setString(4, modeloCliente.getEndereco().getCidade());
+            pst.setString(5, modeloCliente.getEndereco().getBairro());
             pst.executeUpdate();
 
             // Recupera a idEndereco
@@ -47,7 +46,7 @@ public class ControleCliente {
                 id_Endereco = rs.getInt(1);
             }
 
-            String sql2 = "insert into cliente (nome_Cliente,telefone_cliente,cpf_cliente,email_cliente,id_endereco) values (?,?,?,?,?,?)";
+            String sql2 = "insert into cliente (nome_Cliente,telefone_cliente,cpf_cliente,email_cliente,id_endereco) values (?,?,?,?,?)";
             pst = conexao.prepareStatement(sql2);
             pst.setString(1, modeloCliente.getNome());
             pst.setString(2, modeloCliente.getTelefone());
@@ -65,7 +64,7 @@ public class ControleCliente {
         conexao.close();
     }
 
-    public void atualizarCliente(ModeloCliente modeloCliente, ModeloEndereco modeloEndereco) throws SQLException {
+    public void atualizarCliente(ModeloCliente modeloCliente) throws SQLException {
         this.conexao = new Conectar().openConnection();
         try {
             buscarIdDoEndereco(modeloCliente);//metodo para buscar o id do endereço
@@ -80,11 +79,11 @@ public class ControleCliente {
 
             String sql = "update endereco set nome_endereco=?,numero=?,estado_endereco=?,Cidade_endereco=?,bairro_endereco=? where id_endereco=?";
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, modeloEndereco.getRua());
-            pst.setInt(2, modeloEndereco.getNumero());
-            pst.setString(3, modeloEndereco.getEstado());
-            pst.setString(4, modeloEndereco.getCidade());
-            pst.setString(5, modeloEndereco.getBairro());
+            pst.setString(1, modeloCliente.getEndereco().getRua());
+            pst.setInt(2, modeloCliente.getEndereco().getNumero());
+            pst.setString(3, modeloCliente.getEndereco().getEstado());
+            pst.setString(4, modeloCliente.getEndereco().getCidade());
+            pst.setString(5, modeloCliente.getEndereco().getBairro());
             pst.setInt(6, idEndereco);//variável que contém o id do endereço
 
             int adicionado = pst.executeUpdate();
