@@ -118,7 +118,7 @@ public class ControleProduto {
         String sql = "select produto.id_produto as 'Código do produto',"
                 + " produto.nome_produto as 'Nome do produto', "
                 + "produto.quantidade as 'Quantidade em estoque', "
-                + "produto.valor_venda as 'Valor de venda' "
+                + "produto.valor_venda as 'Valor por item' "
                 + "from produto\n"
                 + "where produto.nome_produto like ?";
         try {

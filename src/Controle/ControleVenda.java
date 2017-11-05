@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import net.proteanit.sql.DbUtils;
@@ -32,6 +33,7 @@ public class ControleVenda {
     private ResultSet rs = null;
     private int idCliente;
     private int id_venda;
+    private boolean idvenda = false;
 
     public void pesquisar_venda(ModeloVenda modeloVenda, JTable TablePesquisa) throws SQLException {
         this.conexao = new Conectar().openConnection();
@@ -52,7 +54,26 @@ public class ControleVenda {
         this.conexao.close();
     }
 
-    public void pesquisar_itens_venda(JTable TableItensVenda) throws SQLException {
+    public void pesquisarVenda(ModeloVenda modeloVenda, JTable TablePesquisa) throws SQLException {
+        this.conexao = new Conectar().openConnection();
+        String sql = "select venda.id_venda as 'Código',strftime('%d/%m/%Y',venda.data_venda)as 'Data',venda.valor_venda as 'Valor', cliente.nome_cliente as 'Cliente', usuario.nome_login as 'Usuario responsável' from venda join cliente on venda.id_cliente = cliente.id_cliente join usuario on usuario.id_usuario = venda.id_usuario  where venda.data_venda = ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            SimpleDateFormat formataData = new SimpleDateFormat("yyyy-MM-dd");
+            //passando o conteudo da caixa de pesquisa para o ?
+            //atenção ao "%" - continuação da string sql
+            pst.setString(1, formataData.format(modeloVenda.getData()));
+            rs = pst.executeQuery();
+            // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
+            TablePesquisa.setModel(DbUtils.resultSetToTableModel(rs));
+            //JOptionPane.showMessageDialog(null, "Não existe venda realizada no período selecionado!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        this.conexao.close();
+    }
+
+    public void pesquisar_itens_venda(JTable TableItensVenda, int codigo) throws SQLException {
         this.conexao = new Conectar().openConnection();
         String sql = "select produto.id_produto as 'Código',"
                 + "produto.nome_produto as 'Produto',"
@@ -66,7 +87,14 @@ public class ControleVenda {
             pst = conexao.prepareStatement(sql);
             //passando o conteudo da caixa de pesquisa para o ?
             //atenção ao "%" - continuação da string sql
-            pst.setInt(1, this.id_venda);
+            if (idvenda == true) {
+                pst.setInt(1, this.id_venda);
+                rs = pst.executeQuery();
+                TableItensVenda.setModel(DbUtils.resultSetToTableModel(rs));
+                idvenda = false;
+                return;
+            }
+            pst.setInt(1, codigo);
             rs = pst.executeQuery();
             // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
             TableItensVenda.setModel(DbUtils.resultSetToTableModel(rs));
@@ -89,6 +117,7 @@ public class ControleVenda {
             rs = pst.getGeneratedKeys();
             if (rs.next()) {
                 id_venda = rs.getInt(1);
+                idvenda = true;
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -134,6 +163,7 @@ public class ControleVenda {
 
     public void adicionarItem(ModeloVenda modeloVenda) throws SQLException {
         this.conexao = new Conectar().openConnection();
+        idvenda = true;
         String sql = "insert into itens_venda (id_venda, id_produto, quntidade, valor_da_venda) values (?,?,?,?)";
         pst = conexao.prepareStatement(sql);
         pst.setInt(1, this.id_venda);

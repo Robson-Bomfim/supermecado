@@ -13,6 +13,7 @@ import Modelo.ModeloVenda;
 import dao.Conectar;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -33,7 +34,7 @@ public class Venda extends javax.swing.JInternalFrame {
     private double valorTotal;
     private int quantidadeEstoque;
 
-    public Venda() throws SQLException {
+    public Venda() throws SQLException, ParseException {
         initComponents();
         this.conexao = new Conectar().openConnection();
         this.dataDaCompra();
@@ -54,13 +55,13 @@ public class Venda extends javax.swing.JInternalFrame {
     }
 
     private void pesquisarVendaProduto() throws SQLException {
-
         modeloProduto.setPesquisa(TextFieldProduto.getText());
         controleProduto.pesquisar_produto_cliente(modeloProduto, TablePesquisa);
     }
 
     private void pesquisarItensVenda() throws SQLException {
-        controleVenda.pesquisar_itens_venda(TableItensVenda);
+        int codigo = 0;
+        controleVenda.pesquisar_itens_venda(TableItensVenda,codigo);
     }
 
     private void selecionador() {
@@ -97,10 +98,12 @@ public class Venda extends javax.swing.JInternalFrame {
         TextFieldValorItem.setText(TableItensVenda.getModel().getValueAt(setar, 3).toString());
     }
 
-    private void registroDeVenda() throws SQLException {
+    private void registroDeVenda() throws SQLException, ParseException {
+        SimpleDateFormat formateData = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = formateData.parse(FormattedTextFieldDataVenda.getText());
+        modeloVenda.setData(date);
         modeloCliente.setNome(TextFieldNomeCiente.getText());
         modeloVenda.setCliente(modeloCliente);
-        modeloVenda.setData(FormattedTextFieldDataVenda.getText());
         controleVenda.registroVenda(modeloVenda);
     }
 
@@ -643,7 +646,7 @@ public class Venda extends javax.swing.JInternalFrame {
             if (valorTotal > 0) {//condiçao para não deixar o usuario finalizar uma venda com valor "0"
                 finalizarVenda();//chamando o método finalizarVenda
                 venda = 0;//variavel que define o formulario de venda fechado
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(rootPane, "Primeiro adicione itens a lista de produto!");
             }
         } catch (SQLException ex) {
@@ -661,7 +664,7 @@ public class Venda extends javax.swing.JInternalFrame {
             int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja cancelar esta venda?", "Atenção", JOptionPane.YES_NO_OPTION);
             // a condição abaixo valida a escolha do usuário
             if (sair == JOptionPane.YES_OPTION)//se a opção que o usuario for sim
-            {  
+            {
                 this.excluir();//chama metodo para excluir uma venda
                 this.dispose();//sai do formulario de venda
                 venda = 0;//variavel que define o formulario de venda fechado

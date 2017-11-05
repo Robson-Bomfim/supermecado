@@ -60,7 +60,7 @@ public class Home extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         MenuRelatorio = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        RelatorioVendas = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         MenuRelatorioServico = new javax.swing.JMenuItem();
         MenuAjuda = new javax.swing.JMenu();
@@ -115,7 +115,7 @@ public class Home extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        MenuCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_client_account_template_64002.png"))); // NOI18N
+        MenuCadastro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_sign-up_49622.png"))); // NOI18N
         MenuCadastro.setText("Cadastros");
         MenuCadastro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuCadastro.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -190,29 +190,28 @@ public class Home extends javax.swing.JFrame {
 
         Menu.add(jMenu1);
 
-        MenuRelatorio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_report_user_36375.png"))); // NOI18N
+        MenuRelatorio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_reports_49615.png"))); // NOI18N
         MenuRelatorio.setText("Relatórios");
         MenuRelatorio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuRelatorio.setEnabled(false);
         MenuRelatorio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-37_910741.png"))); // NOI18N
-        jMenuItem3.setText("Imprimir");
-        jMenuItem3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        RelatorioVendas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
+        RelatorioVendas.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        RelatorioVendas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_sales-report_49617.png"))); // NOI18N
+        RelatorioVendas.setText("Vendas");
+        RelatorioVendas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                RelatorioVendasActionPerformed(evt);
             }
         });
-        MenuRelatorio.add(jMenuItem3);
+        MenuRelatorio.add(RelatorioVendas);
         MenuRelatorio.add(jSeparator4);
 
-        MenuRelatorioServico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        MenuRelatorioServico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         MenuRelatorioServico.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        MenuRelatorioServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-14_463013.png"))); // NOI18N
-        MenuRelatorioServico.setText("Serviços");
+        MenuRelatorioServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-37_910741.png"))); // NOI18N
+        MenuRelatorioServico.setText("Imprimir");
         MenuRelatorioServico.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuRelatorioServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,7 +222,7 @@ public class Home extends javax.swing.JFrame {
 
         Menu.add(MenuRelatorio);
 
-        MenuAjuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_help_blue_40797.png"))); // NOI18N
+        MenuAjuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_Male-User-Help_49594.png"))); // NOI18N
         MenuAjuda.setText("Ajuda");
         MenuAjuda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuAjuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -424,7 +423,7 @@ public class Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void MenuRelatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRelatorioServicoActionPerformed
         // TODO add your handling code here:
         String y = Imprimir.y;
         try {
@@ -434,22 +433,6 @@ public class Home extends javax.swing.JFrame {
                 jDesktopPane1.add(i);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "A janela de impressão já está aberta!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void MenuRelatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRelatorioServicoActionPerformed
-        // TODO add your handling code here:
-        String y = Servico.y;
-        try {
-            if (y == null) {
-                Servico s = new Servico();
-                s.setVisible(true);
-                jDesktopPane1.add(s);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "A janela de serviço já está aberta!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -495,6 +478,14 @@ public class Home extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "A janela de cadastro de fornecedores já está aberta!");
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void RelatorioVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RelatorioVendasActionPerformed
+        // TODO add your handling code here:
+        PesquisaVendas pv = new PesquisaVendas();
+        pv.setVisible(true);
+        jDesktopPane1.add(pv);
+        
+    }//GEN-LAST:event_RelatorioVendasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -554,6 +545,7 @@ public class Home extends javax.swing.JFrame {
     public static javax.swing.JMenu MenuRelatorio;
     private javax.swing.JMenuItem MenuRelatorioServico;
     public static javax.swing.JMenuItem MenuUsuario;
+    private javax.swing.JMenuItem RelatorioVendas;
     private javax.swing.JMenuItem TrocaDeUser;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
@@ -562,7 +554,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPopupMenu.Separator jSeparator1;

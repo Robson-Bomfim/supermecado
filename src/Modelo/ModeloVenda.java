@@ -5,13 +5,18 @@
  */
 package Modelo;
 
+import java.util.Date;
+
+
+
 public class ModeloVenda {
     private int idVenda;
-    private String data;
+    private Date data;
     private String pesquisar;
     private double valorVenda;
     private ModeloCliente Cliente;
     private ModeloProduto Produto;
+    private ModeloUsuario idUsuario;
     private double valorIten;
     private int valorTotal;
     private int quantidade;
@@ -24,11 +29,11 @@ public class ModeloVenda {
         this.idVenda = idvenda;
     }
 
-    public String getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
 
@@ -86,6 +91,14 @@ public class ModeloVenda {
 
     public void setValorTotal(int valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public ModeloUsuario getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(ModeloUsuario idUsuario) {
+        this.idUsuario = idUsuario;
     }
     
 }
