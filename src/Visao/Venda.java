@@ -60,8 +60,7 @@ public class Venda extends javax.swing.JInternalFrame {
     }
 
     private void pesquisarItensVenda() throws SQLException {
-        int codigo = 0;
-        controleVenda.pesquisar_itens_venda(TableItensVenda,codigo);
+        controleVenda.pesquisar_itens_venda(TableItensVenda);
     }
 
     private void selecionador() {

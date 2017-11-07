@@ -7,6 +7,7 @@ package Controle;
 
 import Modelo.ModeloCliente;
 import Modelo.ModeloVenda;
+import Visao.Home;
 import Visao.Venda;
 import dao.Conectar;
 import java.sql.Connection;
@@ -26,6 +27,7 @@ import net.proteanit.sql.DbUtils;
 public class ControleVenda {
 
     ModeloCliente modeloCliente = new ModeloCliente();
+    ControleUsuario controleUsuario = new ControleUsuario();
     private Connection conexao = null;
     private Connection conector = null;
     private Connection conect = null;
@@ -33,7 +35,6 @@ public class ControleVenda {
     private ResultSet rs = null;
     private int idCliente;
     private int id_venda;
-    private boolean idvenda = false;
 
     public void pesquisar_venda(ModeloVenda modeloVenda, JTable TablePesquisa) throws SQLException {
         this.conexao = new Conectar().openConnection();
@@ -56,7 +57,7 @@ public class ControleVenda {
 
     public void pesquisarVenda(ModeloVenda modeloVenda, JTable TablePesquisa) throws SQLException {
         this.conexao = new Conectar().openConnection();
-        String sql = "select venda.id_venda as 'Código',strftime('%d/%m/%Y',venda.data_venda)as 'Data',venda.valor_venda as 'Valor', cliente.nome_cliente as 'Cliente', usuario.nome_login as 'Usuario responsável' from venda join cliente on venda.id_cliente = cliente.id_cliente join usuario on usuario.id_usuario = venda.id_usuario  where venda.data_venda = ?";
+        String sql = "select venda.id_venda as 'Código',strftime('%d/%m/%Y',venda.data_venda)as 'Data',venda.valor_venda as 'Valor total', cliente.nome_cliente as 'Cliente', usuario.nome_login as 'Usuario responsável' from venda join cliente on venda.id_cliente = cliente.id_cliente join usuario on usuario.id_usuario = venda.id_usuario  where venda.data_venda = ?";
         try {
             pst = conexao.prepareStatement(sql);
             SimpleDateFormat formataData = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,7 +74,27 @@ public class ControleVenda {
         this.conexao.close();
     }
 
-    public void pesquisar_itens_venda(JTable TableItensVenda, int codigo) throws SQLException {
+    public void pesquisarVendaPeriodo(ModeloVenda modeloVenda,ModeloVenda modelVenda, JTable TablePesquisa) throws SQLException {
+        this.conexao = new Conectar().openConnection();
+        String sql = "select venda.id_venda as 'Código',strftime('%d/%m/%Y',venda.data_venda)as 'Data',venda.valor_venda as 'Valor total', cliente.nome_cliente as 'Cliente', usuario.nome_login as 'Usuario responsável' from venda join cliente on venda.id_cliente = cliente.id_cliente join usuario on usuario.id_usuario = venda.id_usuario  where venda.data_venda between ? and ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            SimpleDateFormat formataData = new SimpleDateFormat("yyyy-MM-dd");
+            //passando o conteudo da caixa de pesquisa para o ?
+            //atenção ao "%" - continuação da string sql
+            pst.setString(1, formataData.format(modeloVenda.getData()));
+            pst.setString(2, formataData.format(modelVenda.getData()));
+            rs = pst.executeQuery();
+            // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
+            TablePesquisa.setModel(DbUtils.resultSetToTableModel(rs));
+            //JOptionPane.showMessageDialog(null, "Não existe venda realizada no período selecionado!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        this.conexao.close();
+    }
+
+    public void pesquisar_itens_venda(JTable TableItensVenda) throws SQLException {
         this.conexao = new Conectar().openConnection();
         String sql = "select produto.id_produto as 'Código',"
                 + "produto.nome_produto as 'Produto',"
@@ -85,16 +106,29 @@ public class ControleVenda {
                 + "group by produto.nome_produto, itens_venda.quntidade";
         try {
             pst = conexao.prepareStatement(sql);
-            //passando o conteudo da caixa de pesquisa para o ?
-            //atenção ao "%" - continuação da string sql
-            if (idvenda == true) {
-                pst.setInt(1, this.id_venda);
-                rs = pst.executeQuery();
-                TableItensVenda.setModel(DbUtils.resultSetToTableModel(rs));
-                idvenda = false;
-                return;
-            }
-            pst.setInt(1, codigo);
+            pst.setInt(1, this.id_venda);
+            rs = pst.executeQuery();
+            // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
+            TableItensVenda.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        this.conexao.close();
+    }
+
+    public void pesquisarItensVenda(JTable TableItensVenda, int idVenda) throws SQLException {
+        this.conexao = new Conectar().openConnection();
+        String sql = "select produto.id_produto as 'Código',"
+                + "produto.nome_produto as 'Produto',"
+                + "itens_venda.quntidade as 'Quantidade',"
+                + "itens_venda.valor_da_venda as 'Valor por item',"
+                + "(itens_venda.valor_da_venda * itens_venda.quntidade) as 'Valor total' "
+                + "from produto join itens_venda on produto.id_produto = itens_venda.id_produto "
+                + "join venda on venda.id_venda = itens_venda.id_venda where venda.id_venda = ? "
+                + "group by produto.nome_produto, itens_venda.quntidade";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, idVenda);
             rs = pst.executeQuery();
             // a linha abaixo usa a biblioteca rs2xml.jar para preencher a tabela
             TableItensVenda.setModel(DbUtils.resultSetToTableModel(rs));
@@ -106,18 +140,18 @@ public class ControleVenda {
 
     public void registroVenda(ModeloVenda modeloVenda) throws SQLException {
         this.conexao = new Conectar().openConnection();
-        String sql = "insert into venda (valor_venda,id_cliente) values (?,?)";
+        String sql = "insert into venda (valor_venda,id_usuario,id_cliente) values (?,?,?)";
         try {
             pst = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pst.setFloat(1, 0);
             pst.setInt(2, 0);
+            pst.setInt(3, 0);
             pst.execute();
 
             // Recupera o id_venda
             rs = pst.getGeneratedKeys();
             if (rs.next()) {
                 id_venda = rs.getInt(1);
-                idvenda = true;
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -130,12 +164,14 @@ public class ControleVenda {
             buscarIdClienteVenda(modeloVenda);
             this.conexao = new Conectar().openConnection();
             String sql = "update venda set valor_venda = ?,"
-                    + "id_cliente = ?"
+                    + "id_cliente = ?,"
+                    + "id_usuario = ?"
                     + "where id_venda = ?";
             pst = conexao.prepareStatement(sql);
             pst.setDouble(1, modeloVenda.getValorVenda());
             pst.setInt(2, this.idCliente);
-            pst.setInt(3, this.id_venda);
+            pst.setInt(3, Home.idUser);
+            pst.setInt(4, this.id_venda);
             int atualizado = pst.executeUpdate();
             if (atualizado > 0) {
                 JOptionPane.showMessageDialog(null, "Venda finalizada com sucesso!");
@@ -163,7 +199,6 @@ public class ControleVenda {
 
     public void adicionarItem(ModeloVenda modeloVenda) throws SQLException {
         this.conexao = new Conectar().openConnection();
-        idvenda = true;
         String sql = "insert into itens_venda (id_venda, id_produto, quntidade, valor_da_venda) values (?,?,?,?)";
         pst = conexao.prepareStatement(sql);
         pst.setInt(1, this.id_venda);
@@ -264,12 +299,12 @@ public class ControleVenda {
         conect.close();
     }
 
-    private void pesquisarItensVenda() throws SQLException {//baixar no estoque
+    private void pesquisarItensVenda() throws SQLException {//pesquisa a quantidade vendida e no estoque e passa como parametro na variável "resultado" para fazer o estorno na tabela produto
         int quantidadeEstoque, quantidadeVendida, resultado = 0;
         String sql = "select itens_venda.quntidade,produto.quantidade from venda \n"
                 + "join itens_venda on venda.id_venda = itens_venda.id_venda\n"
                 + "join produto on itens_venda.id_produto = produto.id_produto\n"
-                + "where venda.id_venda = " + this.id_venda;
+                + "where itens_venda.id_produto = " + Venda.idItensProduto;
         pst = conect.prepareStatement(sql);
         rs = pst.executeQuery();
         if (rs.next()) {
@@ -277,10 +312,10 @@ public class ControleVenda {
             quantidadeEstoque = rs.getInt("quantidade");
             resultado = quantidadeEstoque + quantidadeVendida;
         }
-        estornoDoProduto(resultado);//baixar no estoque passando o nome e a quantidade
+        estornoDoProduto(resultado);//método que recebe a variável "resultado" para baixar no estoque a quantidade
     }
 
-    private void estornoDoProduto(int resultado) throws SQLException {//baixando no estoque
+    private void estornoDoProduto(int resultado) throws SQLException {//método que recebe a variável "resultado" para baixar no estoque a quantidade
         String sql = "update produto set quantidade = ? where id_produto = ?";
         pst = conect.prepareStatement(sql);
         pst.setInt(1, resultado);

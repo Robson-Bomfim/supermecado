@@ -5,10 +5,13 @@
  */
 package Visao;
 
+import Controle.ControleUsuario;
+import Modelo.ModeloUsuario;
 import static Visao.Venda.venda;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +24,10 @@ import javax.swing.Timer;
  */
 public class Home extends javax.swing.JFrame {
 
+    ModeloUsuario modeloUsuario = new ModeloUsuario();
+    ControleUsuario controleUsuario = new ControleUsuario();
+    public static int idUser;
+
     /**
      * Creates new form Home
      */
@@ -28,6 +35,11 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
         setExtendedState(MAXIMIZED_BOTH);
+    }
+
+    public void idUsuario() throws SQLException {
+        modeloUsuario.setNome_login(LblUsuario.getText());
+        idUser = controleUsuario.buscarIdDoUsuario(modeloUsuario);
     }
 
     /**
@@ -61,8 +73,6 @@ public class Home extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         MenuRelatorio = new javax.swing.JMenu();
         RelatorioVendas = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        MenuRelatorioServico = new javax.swing.JMenuItem();
         MenuAjuda = new javax.swing.JMenu();
         telaSobre = new javax.swing.JMenuItem();
         MenuOpcao = new javax.swing.JMenu();
@@ -163,6 +173,7 @@ public class Home extends javax.swing.JFrame {
         MenuUsuario.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         MenuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/user_285655.png"))); // NOI18N
         MenuUsuario.setText("Usuário");
+        MenuUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MenuUsuario.setEnabled(false);
         MenuUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,12 +186,14 @@ public class Home extends javax.swing.JFrame {
 
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_Sales-by-Payment-Method-rep_49616.png"))); // NOI18N
         jMenu1.setText("Vendas");
+        jMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jMenu1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_note_1086667.png"))); // NOI18N
         jMenuItem6.setText("Formulário");
+        jMenuItem6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
@@ -200,25 +213,13 @@ public class Home extends javax.swing.JFrame {
         RelatorioVendas.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         RelatorioVendas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_sales-report_49617.png"))); // NOI18N
         RelatorioVendas.setText("Vendas");
+        RelatorioVendas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         RelatorioVendas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RelatorioVendasActionPerformed(evt);
             }
         });
         MenuRelatorio.add(RelatorioVendas);
-        MenuRelatorio.add(jSeparator4);
-
-        MenuRelatorioServico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        MenuRelatorioServico.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        MenuRelatorioServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-37_910741.png"))); // NOI18N
-        MenuRelatorioServico.setText("Imprimir");
-        MenuRelatorioServico.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        MenuRelatorioServico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuRelatorioServicoActionPerformed(evt);
-            }
-        });
-        MenuRelatorio.add(MenuRelatorioServico);
 
         Menu.add(MenuRelatorio);
 
@@ -231,6 +232,7 @@ public class Home extends javax.swing.JFrame {
         telaSobre.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         telaSobre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-18_463010.png"))); // NOI18N
         telaSobre.setText("Sobre");
+        telaSobre.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         telaSobre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 telaSobreActionPerformed(evt);
@@ -262,6 +264,7 @@ public class Home extends javax.swing.JFrame {
         TrocaDeUser.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         TrocaDeUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_free-09_463017.png"))); // NOI18N
         TrocaDeUser.setText("Sair");
+        TrocaDeUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         TrocaDeUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TrocaDeUserActionPerformed(evt);
@@ -376,10 +379,10 @@ public class Home extends javax.swing.JFrame {
 
     private void MenuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuUsuarioActionPerformed
         // TODO add your handling code here:
-        String x = TelaUsuario.x;
+        String x = TelaUser.x;
         try {
             if (x == null) {
-                TelaUsuario t = new TelaUsuario();
+                TelaUser t = new TelaUser();
                 t.setVisible(true);
                 jDesktopPane1.add(t);
             } else {
@@ -395,6 +398,7 @@ public class Home extends javax.swing.JFrame {
         int venda = Venda.venda;
         try {
             if (venda == 0) {
+                idUsuario();
                 Venda v = new Venda();
                 v.setVisible(true);
                 jDesktopPane1.add(v);
@@ -422,22 +426,6 @@ public class Home extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void MenuRelatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuRelatorioServicoActionPerformed
-        // TODO add your handling code here:
-        String y = Imprimir.y;
-        try {
-            if (y == null) {
-                Imprimir i = new Imprimir();
-                i.setVisible(true);
-                jDesktopPane1.add(i);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "A janela de impressão já está aberta!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_MenuRelatorioServicoActionPerformed
 
     private void telaSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telaSobreActionPerformed
         // TODO add your handling code here:
@@ -484,7 +472,7 @@ public class Home extends javax.swing.JFrame {
         PesquisaVendas pv = new PesquisaVendas();
         pv.setVisible(true);
         jDesktopPane1.add(pv);
-        
+
     }//GEN-LAST:event_RelatorioVendasActionPerformed
 
     /**
@@ -543,7 +531,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenu MenuOpcao;
     private javax.swing.JMenuItem MenuOpcaoSair;
     public static javax.swing.JMenu MenuRelatorio;
-    private javax.swing.JMenuItem MenuRelatorioServico;
     public static javax.swing.JMenuItem MenuUsuario;
     private javax.swing.JMenuItem RelatorioVendas;
     private javax.swing.JMenuItem TrocaDeUser;
@@ -559,7 +546,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JMenuItem telaSobre;
     // End of variables declaration//GEN-END:variables

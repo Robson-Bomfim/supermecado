@@ -115,8 +115,8 @@ public class ControleProduto {
 
         this.conexao = new Conectar().openConnection();
 
-        String sql = "select produto.id_produto as 'Código do produto',"
-                + " produto.nome_produto as 'Nome do produto', "
+        String sql = "select produto.id_produto as 'Código',"
+                + " produto.nome_produto as 'Nome', "
                 + "produto.quantidade as 'Quantidade em estoque', "
                 + "produto.valor_venda as 'Valor por item' "
                 + "from produto\n"

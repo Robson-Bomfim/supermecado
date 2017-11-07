@@ -11,8 +11,6 @@ import Visao.Home;
 import dao.Conectar;
 import java.awt.Color;
 import java.awt.HeadlessException;
-import java.awt.Image;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,12 +29,14 @@ public class ControleUsuario {
     private PreparedStatement pst = null;
     private int idEndereco;
     public boolean flag = false;
+    public boolean flag1 = false;
+    //private int idUsuario;
     ModeloEndereco modeloEndereco = new ModeloEndereco();
     ModeloEndereco modelEndereco = new ModeloEndereco();
 
     public void logar(ModeloUsuario modeloUsuario) throws SQLException {
         this.conexaoUsuario = new Conectar().openConnection();
-
+        //buscarIdDoUsuario(modeloUsuario);
         String slq = "select * from usuario where nome_login = ? and senha = ?";
         try {
             //as linhas abaixo preparam a consulta ao banco em função do 
@@ -148,7 +148,7 @@ public class ControleUsuario {
         conexaoUsuario.close();
         return modeloUsuario;
     }
-    
+
     public void adicionarUsuario(ModeloUsuario modeloUsuario) throws SQLException {//metodo para adicionar usuário
         this.conexaoUsuario = new Conectar().openConnection();
         try {
@@ -187,6 +187,7 @@ public class ControleUsuario {
             }
 
         } catch (SQLException ex) {
+            flag1 = true;
             JOptionPane.showMessageDialog(null, "Usuáiro já cadastrado!");
         }
         conexaoUsuario.close();
@@ -227,6 +228,23 @@ public class ControleUsuario {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao buscar o código de endereço!\nErro: " + ex);
         }
+    }
+
+    public int buscarIdDoUsuario(ModeloUsuario modeloUsuario) throws SQLException {
+        this.conexaoUsuario = new Conectar().openConnection();
+        int idUsuario = 0;
+        String sql = "select * from usuario where nome_login ='" + modeloUsuario.getNome_login().toUpperCase() + "'";
+        try {
+            pst = conexaoUsuario.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                idUsuario = rs.getInt("id_usuario");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao buscar o código de usuario!\nErro: " + ex);
+        }
+        conexaoUsuario.close();
+        return idUsuario;
     }
 
     private void buscarDadosEndereco(ModeloEndereco modeloEndereco) throws SQLException {
