@@ -38,7 +38,6 @@ public class RelatorioEmPDF {
         boolean gerado = false;
         // criação do documento
         Document document;
-        //OutputStream Output = null;
         try {
             document = new Document(PageSize.A4, 30, 20, 20, 30);
 
@@ -87,8 +86,7 @@ public class RelatorioEmPDF {
 
             document.close();
 
-            JOptionPane.showMessageDialog(
-                    null, "Relatório gerado na pasta documentos!");
+            JOptionPane.showMessageDialog(null, "Relatório gerado na pasta documentos!");
             if (!gerado) {
                 JOptionPane.showMessageDialog(null, "Erro na impressão do relatório!");
             }
@@ -127,7 +125,7 @@ public class RelatorioEmPDF {
         header.setHorizontalAlignment(Element.ALIGN_CENTER);
         header.setBackgroundColor(new BaseColor(100, 150, 200));
         header.setColspan(5);
-        table.addCell(header);
+        table.addCell(header); 
         table.addCell("Código");
         table.addCell("Data");
         table.addCell("Valor total");
