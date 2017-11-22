@@ -100,7 +100,7 @@ public class ControleVenda {
         String sql = "select produto.id_produto as 'Código',"
                 + "produto.nome_produto as 'Produto',"
                 + "itens_venda.quntidade as 'Quantidade',"
-                + "itens_venda.valor_da_venda as 'Valor por item',"
+                + "itens_venda.valor_da_venda as 'Valor p/ item',"
                 + "(itens_venda.valor_da_venda * itens_venda.quntidade) as 'Valor total' "
                 + "from produto join itens_venda on produto.id_produto = itens_venda.id_produto "
                 + "join venda on venda.id_venda = itens_venda.id_venda where venda.id_venda = ? "
