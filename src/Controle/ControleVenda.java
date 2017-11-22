@@ -35,6 +35,7 @@ public class ControleVenda {
     private ResultSet rs = null;
     private int idCliente;
     private int id_venda;
+    private int quantidadeLista;
 
     public void pesquisar_venda(ModeloVenda modeloVenda, JTable TablePesquisa) throws SQLException {
         this.conexao = new Conectar().openConnection();
@@ -74,7 +75,7 @@ public class ControleVenda {
         this.conexao.close();
     }
 
-    public void pesquisarVendaPeriodo(ModeloVenda modeloVenda,ModeloVenda modelVenda, JTable TablePesquisa) throws SQLException {
+    public void pesquisarVendaPeriodo(ModeloVenda modeloVenda, ModeloVenda modelVenda, JTable TablePesquisa) throws SQLException {
         this.conexao = new Conectar().openConnection();
         String sql = "select venda.id_venda as 'Código',strftime('%d/%m/%Y',venda.data_venda)as 'Data',venda.valor_venda as 'Valor total', cliente.nome_cliente as 'Cliente', usuario.nome_login as 'Usuario responsável' from venda join cliente on venda.id_cliente = cliente.id_cliente join usuario on usuario.id_usuario = venda.id_usuario  where venda.data_venda between ? and ?";
         try {
@@ -233,9 +234,9 @@ public class ControleVenda {
         pst.execute();
     }
 
-    public void excluirVenda(ModeloVenda modeloVenda) throws SQLException {
+    public void excluirVenda(ModeloVenda modeloVenda) throws SQLException {//método para excluir os itens da venda
         this.conexao = new Conectar().openConnection();
-        excluirItensVenda(modeloVenda);
+        excluirItensVenda(modeloVenda);//método chamado para excluir os itens da tabela "itens_venda" primeiro
         try {
             pst = conexao.prepareStatement("delete from venda where id_venda=?");
             pst.setInt(1, modeloVenda.getIdvenda());
@@ -249,9 +250,9 @@ public class ControleVenda {
         conexao.close();
     }
 
-    private void excluirItensVenda(ModeloVenda modeloVenda) throws SQLException {
+    private void excluirItensVenda(ModeloVenda modeloVenda) throws SQLException {//método para excluir os itens da tabela "itens_venda"
         this.conexao = new Conectar().openConnection();
-        pesquisarVenda();
+        pesquisarVenda();//método chamado para pesquisar os itens antes de excluir
         try {
             pst = conexao.prepareStatement("delete from itens_venda where id_venda=?");
             pst.setInt(1, modeloVenda.getIdvenda());
@@ -286,33 +287,37 @@ public class ControleVenda {
         pst.executeUpdate();
     }
 
-    public void excluirItensLista() throws SQLException {
+    public void excluirItensLista(int quantidade) throws SQLException {
         this.conect = new Conectar().openConnection();
-        pesquisarItensVenda();
-        try {
-            pst = conect.prepareStatement("delete from itens_venda where id_produto=?");
-            pst.setInt(1, Venda.idItensProduto);
-            pst.executeUpdate();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "itens_venda não excluido!\nErro: " + ex);
+        pesquisarItensVenda(quantidade);
+        if (quantidadeLista <= 0) {
+            try {
+                pst = conect.prepareStatement("delete from itens_venda where id_produto=?");
+                pst.setInt(1, Venda.idItensProduto);
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "itens_venda não excluido!\nErro: " + ex);
+            }
         }
         conect.close();
     }
 
-    private void pesquisarItensVenda() throws SQLException {//pesquisa a quantidade vendida e no estoque e passa como parametro na variável "resultado" para fazer o estorno na tabela produto
-        int quantidadeEstoque, quantidadeVendida, resultado = 0;
+    private void pesquisarItensVenda(int quantidade) throws SQLException {//pesquisa a quantidade vendida e no estoque e passa como parametro na variável "resultado" para fazer o estorno na tabela produto
+        int quantidadeEstoque, quantidadeList, resultado = 0, result = 0;
         String sql = "select itens_venda.quntidade,produto.quantidade from venda \n"
                 + "join itens_venda on venda.id_venda = itens_venda.id_venda\n"
                 + "join produto on itens_venda.id_produto = produto.id_produto\n"
-                + "where itens_venda.id_produto = " + Venda.idItensProduto;
+                + "where itens_venda.id_venda = " + this.id_venda;
         pst = conect.prepareStatement(sql);
         rs = pst.executeQuery();
         if (rs.next()) {
-            quantidadeVendida = rs.getInt("quntidade");
+            quantidadeList = rs.getInt("quntidade");
             quantidadeEstoque = rs.getInt("quantidade");
-            resultado = quantidadeEstoque + quantidadeVendida;
+            result = quantidadeList - quantidade;
+            resultado = quantidadeEstoque + quantidade;
         }
         estornoDoProduto(resultado);//método que recebe a variável "resultado" para baixar no estoque a quantidade
+        estornoList(result);//método que recebe a variável "result" para baixar no tabela itens_venda a quantidade
     }
 
     private void estornoDoProduto(int resultado) throws SQLException {//método que recebe a variável "resultado" para baixar no estoque a quantidade
@@ -322,8 +327,26 @@ public class ControleVenda {
         pst.setInt(2, Venda.idItensProduto);
         int adicionado = pst.executeUpdate();
         if (adicionado > 0) {
-            JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
+            JOptionPane.showMessageDialog(null, "Removido com sucesso!");
         }
+    }
+
+    private void consultaLista() throws SQLException {
+        String sql = "select * from itens_venda where id_produto = " + Venda.idItensProduto;
+        pst = conect.prepareStatement(sql);
+        rs = pst.executeQuery();
+        if (rs.next()) {
+            quantidadeLista = rs.getInt("quntidade");
+        }
+    }
+
+    private void estornoList(int result) throws SQLException {//método que recebe a variável "resultado" para baixar no estoque a quantidade
+        String sql = "update itens_venda set quntidade = ? where id_produto = ?";
+        pst = conect.prepareStatement(sql);
+        pst.setInt(1, result);
+        pst.setInt(2, Venda.idItensProduto);
+        pst.executeUpdate();    
+        consultaLista();
     }
 
     public int getId_venda() {
