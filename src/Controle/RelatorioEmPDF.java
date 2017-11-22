@@ -41,7 +41,7 @@ public class RelatorioEmPDF {
         try {
             document = new Document(PageSize.A4, 30, 20, 20, 30);
 
-            PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\Nova pasta\\Relatório de vendas.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\GitHub\\supermecado\\relatórios\\Relatório de vendas.pdf"));
             document.open();
 
             Font f = new Font(FontFamily.COURIER, 20, Font.BOLD);
@@ -107,7 +107,7 @@ public class RelatorioEmPDF {
         //OutputStream Output = null;
         document = new Document(PageSize.A4, 30, 20, 20, 30);
 
-        PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\Nova pasta\\Relatório de vendas.pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\GitHub\\supermecado\\relatórios\\Relatório de vendas.pdf"));
         document.open();
 
         Font f = new Font(FontFamily.COURIER, 20, Font.BOLD);
