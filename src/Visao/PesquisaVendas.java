@@ -9,11 +9,21 @@ import Controle.ControleVenda;
 import Controle.RelatorioEmPDF;
 import Modelo.ModeloVenda;
 import com.itextpdf.text.DocumentException;
+import dao.Conectar;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -30,6 +40,7 @@ public class PesquisaVendas extends javax.swing.JInternalFrame {
     RelatorioEmPDF pdf = new RelatorioEmPDF();
     private int idVenda;
     public static boolean flag = false;
+    Connection conexao = null;
 
     public PesquisaVendas() {
         initComponents();
@@ -47,6 +58,26 @@ public class PesquisaVendas extends javax.swing.JInternalFrame {
         int setar = TableRelizadas.getSelectedRow();
         idVenda = (int) TableRelizadas.getModel().getValueAt(setar, 0);
         controleVenda.pesquisarItensVenda(TableDetalhes, idVenda);
+    }
+
+    private void pdfreder() {
+        conexao = new Conectar().openConnection();
+        String caminho = "C:\\Users\\Dell\\JaspersoftWorkspace\\MyReports\\RELATORIO VENDAS.jasper";
+
+        JasperReport js = null;
+        try {
+            js = (JasperReport) JRLoader.loadObjectFromFile(caminho);
+            Date date = jDateChooser1.getDate();
+            Date data = jDateChooser2.getDate();
+
+            Map parametro = new HashMap();
+            parametro.put("DataInicial", date);
+            parametro.put("DataFinal", data);
+            JasperPrint print = JasperFillManager.fillReport(js, parametro, conexao);
+            JasperViewer jv = new JasperViewer(print, false);
+            jv.setVisible(true);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -156,7 +187,7 @@ public class PesquisaVendas extends javax.swing.JInternalFrame {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/relatorio-completo.jpg"))); // NOI18N
 
-        jPanel5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -336,7 +367,6 @@ public class PesquisaVendas extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
-
     }//GEN-LAST:event_ButtonPesquisarVendaActionPerformed
 
     private void TableRelizadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableRelizadasMouseClicked
@@ -350,6 +380,7 @@ public class PesquisaVendas extends javax.swing.JInternalFrame {
 
     private void ButtonGerarPdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonGerarPdfActionPerformed
         // TODO add your handling code here:
+
         try {
             if (jDateChooser1.getDate() == null && jDateChooser2.getDate() == null) {
                 JOptionPane.showMessageDialog(rootPane, "Favor informar a data!");

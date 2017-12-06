@@ -8,8 +8,6 @@ package Visao;
 import Controle.ControleCliente;
 import Modelo.ModeloCliente;
 import Modelo.ModeloEndereco;
-import dao.Conectar;
-import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -19,14 +17,12 @@ import javax.swing.JOptionPane;
  */
 public class Clientes extends javax.swing.JInternalFrame {
 
-    Connection conexao = null;
     ModeloCliente modeloCliente = new ModeloCliente();
     ModeloEndereco modeloEndereco = new ModeloEndereco();
     ControleCliente controleCliente = new ControleCliente();
     public static String y;
 
     public Clientes() {
-        this.conexao = new Conectar().openConnection();
         initComponents();
         this.y = "y";
     }

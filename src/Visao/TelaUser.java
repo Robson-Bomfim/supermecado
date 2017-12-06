@@ -9,10 +9,6 @@ import Controle.ControleUsuario;
 import Modelo.ModeloEndereco;
 import Modelo.ModeloUsuario;
 import static Visao.TelaUser.x;
-import dao.Conectar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -25,20 +21,13 @@ public class TelaUser extends javax.swing.JInternalFrame {
     ModeloEndereco modeloEndereco = new ModeloEndereco();
     ModeloUsuario modeloUsuario = new ModeloUsuario();
     ControleUsuario controleUsuario = new ControleUsuario();
-    Connection conexao = null;//usando a variavel conexão do dal
 
-    //criando variaveis especiais para conexão com o banco
-    //Prepared Statement e ResultSet são framework do pacote java.sql
-    //e serve para preparar e executar as instruções sql
-    PreparedStatement pst;
-    ResultSet rs;
     public static String x;
     /**
      * Creates new form TelaUser
      */
     public TelaUser() {
         initComponents();
-        this.conexao = new Conectar().openConnection();
         x = "x";
     }
     

@@ -24,13 +24,11 @@ public class Produto extends javax.swing.JInternalFrame {
     ControleProduto controleProduto = new ControleProduto();
     ControleFornecedor controleFornecedor = new ControleFornecedor();
     public static String x;
-    Connection conexaoProduto = null;
     PreparedStatement pst;
     ResultSet rs;
 
     public Produto() throws SQLException {
         initComponents();
-        this.conexaoProduto = new Conectar().openConnection();
         x = "x";
         controleFornecedor.preencherCombo(ComboBoxFornecedor);
     }

@@ -66,24 +66,6 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" pref="157" max="-2" attributes="0"/>
-                  <Component id="ButtonFinalizarVenda" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel10" linkSize="2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
-                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel9" max="32767" attributes="0"/>
-                      <Component id="TextFieldValorTotal" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
-                  <Component id="ButtonCancelarVenda" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel11" linkSize="2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
               <Component id="jLabel14" alignment="0" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -167,13 +149,58 @@
                   </Group>
                   <EmptySpace min="13" pref="13" max="-2" attributes="0"/>
               </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                  <Component id="jLabel11" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="ButtonCancelarVenda" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jLabel9" max="32767" attributes="0"/>
+                              <Component id="TextFieldValorTotal" min="-2" pref="112" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="TextFieldDesconto" min="-2" pref="87" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="ButtonDesconto" min="-2" pref="97" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="ButtonSair" min="-2" pref="291" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jLabel18" alignment="0" max="32767" attributes="0"/>
+                      <Component id="TextFieldValorPagar" alignment="0" min="-2" pref="112" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="ButtonFinalizarVenda" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel10" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="25" max="32767" attributes="0"/>
+                  <EmptySpace pref="21" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -252,22 +279,43 @@
                           <Component id="jScrollPane2" min="-2" pref="120" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="jLabel10" linkSize="3" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="ButtonFinalizarVenda" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="TextFieldValorPagar" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="ButtonCancelarVenda" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel11" linkSize="3" alignment="1" min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="TextFieldValorTotal" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ButtonCancelarVenda" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="TextFieldDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ButtonDesconto" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="jLabel11" linkSize="3" alignment="1" min="-2" pref="23" max="-2" attributes="0"/>
-                      <Component id="jLabel10" linkSize="3" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="ButtonFinalizarVenda" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="ButtonSair" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="23" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -291,6 +339,7 @@
             </Property>
           </Properties>
           <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="TextFieldNomeCienteFocusGained"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TextFieldNomeCienteKeyReleased"/>
           </Events>
         </Component>
@@ -620,6 +669,78 @@
               <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel18">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Valor total a pagar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="TextFieldValorPagar">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel19">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="R$"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="TextFieldDesconto">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TextFieldDescontoActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="ButtonDesconto">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Desconto"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonDescontoActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="ButtonSair">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Sair"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonSairActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel20">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Conceder um desconto ao cliente"/>
           </Properties>
         </Component>
       </SubComponents>

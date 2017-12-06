@@ -5,6 +5,8 @@
  */
 package Modelo;
 
+import java.util.Date;
+
 public class ModeloProduto {
 
     private int idProduto;
@@ -14,7 +16,8 @@ public class ModeloProduto {
     private double precoVenda;
     private int quantidadeProduto;
     private ModeloFornecedor Fornecedor;
-
+    private Date data;
+    
     public int getIdProduto() {
         return idProduto;
     }
@@ -69,6 +72,14 @@ public class ModeloProduto {
 
     public void setPesquisa(String pesquisa) {
         this.pesquisa = pesquisa;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 
 }

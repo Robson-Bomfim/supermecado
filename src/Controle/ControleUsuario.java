@@ -8,7 +8,7 @@ package Controle;
 import Modelo.ModeloEndereco;
 import Modelo.ModeloUsuario;
 import Visao.Home;
-import dao.Conectar;
+import dao.ConectarSqlServer;
 import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
@@ -35,7 +35,7 @@ public class ControleUsuario {
     ModeloEndereco modelEndereco = new ModeloEndereco();
 
     public void logar(ModeloUsuario modeloUsuario) throws SQLException {
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
         //buscarIdDoUsuario(modeloUsuario);
         String slq = "select * from usuario where nome_login = ? and senha = ?";
         try {
@@ -86,7 +86,7 @@ public class ControleUsuario {
 
     public void atualizarUsuario(ModeloUsuario modeloUsuario) throws SQLException {
 
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
 
         try {
             buscarIdDoEndereco(modeloUsuario);//metodo para buscar o id do endereço referente ao usuario correspondente
@@ -123,7 +123,7 @@ public class ControleUsuario {
     }
 
     public ModeloUsuario consultar(ModeloUsuario modeloUsuario) throws SQLException {
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
         try {
             String sql = "select * from usuario where id_usuario = " + modeloUsuario.getId_usuario();
 
@@ -150,7 +150,7 @@ public class ControleUsuario {
     }
 
     public void adicionarUsuario(ModeloUsuario modeloUsuario) throws SQLException {//metodo para adicionar usuário
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
         try {
 
             String endereco = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
@@ -195,7 +195,7 @@ public class ControleUsuario {
 
     public void excluirUsuario(ModeloUsuario modeloUsuario) throws SQLException {
 
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
 
         String sql = "delete from usuario where id_usuario = ?";
         try {
@@ -217,7 +217,7 @@ public class ControleUsuario {
     }
 
     private void buscarIdDoEndereco(ModeloUsuario modeloUsuario) {
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
         String sql = "select * from usuario where id_usuario = '" + modeloUsuario.getId_usuario() + "'";
         try {
             pst = conexaoUsuario.prepareStatement(sql);
@@ -231,7 +231,7 @@ public class ControleUsuario {
     }
 
     public int buscarIdDoUsuario(ModeloUsuario modeloUsuario) throws SQLException {
-        this.conexaoUsuario = new Conectar().openConnection();
+        this.conexaoUsuario = new ConectarSqlServer().openConnection();
         int idUsuario = 0;
         String sql = "select * from usuario where nome_login ='" + modeloUsuario.getNome_login().toUpperCase() + "'";
         try {
@@ -249,7 +249,7 @@ public class ControleUsuario {
 
     private void buscarDadosEndereco(ModeloEndereco modeloEndereco) throws SQLException {
 
-        this.conexaoUser = new Conectar().openConnection();
+        this.conexaoUser = new ConectarSqlServer().openConnection();
 
         String sql = "select * from endereco where id_endereco = " + modeloEndereco.getId() + " ";
         pst = conexaoUser.prepareStatement(sql);

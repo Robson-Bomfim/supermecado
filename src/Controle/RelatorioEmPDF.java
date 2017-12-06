@@ -41,7 +41,7 @@ public class RelatorioEmPDF {
         try {
             document = new Document(PageSize.A4, 30, 20, 20, 30);
 
-            PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\GitHub\\supermecado\\relatórios\\Relatório de vendas.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Public\\Relatório de vendas.pdf"));
             document.open();
 
             Font f = new Font(FontFamily.COURIER, 20, Font.BOLD);
@@ -86,7 +86,7 @@ public class RelatorioEmPDF {
 
             document.close();
 
-            JOptionPane.showMessageDialog(null, "Relatório gerado na pasta documentos!");
+            JOptionPane.showMessageDialog(null, "Relatório gerado neste caminho 'C:\\Users\\Public\\Relatório de vendas.pdf!'");
             if (!gerado) {
                 JOptionPane.showMessageDialog(null, "Erro na impressão do relatório!");
             }
@@ -107,7 +107,7 @@ public class RelatorioEmPDF {
         //OutputStream Output = null;
         document = new Document(PageSize.A4, 30, 20, 20, 30);
 
-        PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Dell\\Documents\\GitHub\\supermecado\\relatórios\\Relatório de vendas.pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Public\\Relatório de vendas.pdf"));
         document.open();
 
         Font f = new Font(FontFamily.COURIER, 20, Font.BOLD);
@@ -145,7 +145,7 @@ public class RelatorioEmPDF {
         }
         document.add(table);
         document.close();
-        JOptionPane.showMessageDialog(null, "Relatório gerado na pasta documentos!");
+        JOptionPane.showMessageDialog(null, "Relatório gerado neste caminho 'C:\\Users\\Public\\Relatório de vendas.pdf!'");
         if (!gerado) {
             JOptionPane.showMessageDialog(null, "Erro na impressão do relatório!");
         }

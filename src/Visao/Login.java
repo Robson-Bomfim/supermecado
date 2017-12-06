@@ -7,7 +7,7 @@ package Visao;
 
 import Controle.ControleUsuario;
 import Modelo.ModeloUsuario;
-import dao.Conectar;
+import dao.ConectarSqlServer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -20,8 +20,8 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-        this.conexao = new Conectar().openConnection();
-        statusDeConexao();
+        this.conexao = new ConectarSqlServer().openConnection();
+        //statusDeConexao();
         getRootPane().setDefaultButton(ButtonLogar);
     }
 
@@ -43,8 +43,6 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         PasswordField = new javax.swing.JPasswordField();
-        jLabelConexao = new javax.swing.JLabel();
-        jLabelStatusLegenda = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(" LOGIN");
@@ -56,7 +54,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/logo333x64.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel2.setText("User");
+        jLabel2.setText("Usuário");
 
         TextFieldUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         TextFieldUsuario.setToolTipText("Insira o nome do seu usuário");
@@ -72,7 +70,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel3.setText("Password");
+        jLabel3.setText("Senha");
 
         ButtonLogar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         ButtonLogar.setText("Login");
@@ -102,23 +100,15 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_accept_84521.png"))); // NOI18N
-
-        jLabelStatusLegenda.setText("status");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(113, Short.MAX_VALUE)
+                .addContainerGap(122, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabelConexao)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelStatusLegenda, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -133,7 +123,7 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(TextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ButtonLogar)))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(242, Short.MAX_VALUE))
+                .addContainerGap(250, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,12 +145,8 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(jLabel6))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabelConexao)
-                        .addComponent(jLabelStatusLegenda))
-                    .addComponent(ButtonLogar))
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addComponent(ButtonLogar)
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -230,7 +216,7 @@ public class Login extends javax.swing.JFrame {
         controleUsuario.logar(modeloUsuario);
     }
 
-    private void statusDeConexao() {
+    /*private void statusDeConexao() {
         // a linha abaixo serve de apoio ao status de conexão
         //System.out.println(conexao);
         if (conexao != null) {
@@ -240,7 +226,7 @@ public class Login extends javax.swing.JFrame {
             jLabelConexao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_database_close_36899.png")));
             jLabelStatusLegenda.setText("Banco de dados Desconectado");
         }
-    }
+    }*/
 
     /**
      * @param args the command line arguments
@@ -284,8 +270,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabelConexao;
-    private javax.swing.JLabel jLabelStatusLegenda;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

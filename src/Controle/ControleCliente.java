@@ -8,6 +8,7 @@ package Controle;
 import Modelo.ModeloCliente;
 import Modelo.ModeloEndereco;
 import dao.Conectar;
+import dao.ConectarSqlServer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class ControleCliente {
     private int idEndereco;
 
     public void adionarCliente(ModeloCliente modeloCliente) throws SQLException {
-        this.conexao = new Conectar().openConnection();
+        this.conexao = new ConectarSqlServer().openConnection();
         try {
             String sql = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
@@ -65,7 +66,7 @@ public class ControleCliente {
     }
 
     public void atualizarCliente(ModeloCliente modeloCliente) throws SQLException {
-        this.conexao = new Conectar().openConnection();
+        this.conexao = new ConectarSqlServer().openConnection();
         try {
             buscarIdDoEndereco(modeloCliente);//metodo para buscar o id do endereço
             String sql2 = "update cliente set nome_Cliente=?,telefone_cliente=?,email_cliente=?,id_endereco=? where cpf_cliente =?";
@@ -98,7 +99,7 @@ public class ControleCliente {
 
     public void pesquisar_cliente(ModeloCliente modeloCliente, JTable TableCliente) throws SQLException {
 
-        this.conexao = new Conectar().openConnection();
+        this.conexao = new ConectarSqlServer().openConnection();
 
         String sql = "select nome_cliente as 'Nome',telefone_cliente as 'Telefone',cpf_cliente as 'Cpf',email_cliente as 'Email',nome_endereco as 'Rua',numero as 'Número',bairro_endereco as 'Bairro',Cidade_endereco as 'Cidade',estado_endereco as 'Estado' from cliente join endereco on endereco.id_endereco = cliente.id_endereco where nome_Cliente like ?";
         try {
@@ -116,7 +117,7 @@ public class ControleCliente {
     }
 
     public void ExcluirCliente(ModeloCliente modeloCliente) throws SQLException {
-        this.conexao = new Conectar().openConnection();
+        this.conexao = new ConectarSqlServer().openConnection();
         String sql = "delete from cliente where cpf_cliente = ?";
         try {
             pst = conexao.prepareStatement(sql);
@@ -136,7 +137,7 @@ public class ControleCliente {
     }
 
     private void buscarIdDoEndereco(ModeloCliente modeloCliente) {
-        this.conexao = new Conectar().openConnection();
+        this.conexao = new ConectarSqlServer().openConnection();
         String sql = "select * from cliente where cpf_cliente = '" + modeloCliente.getCpf() + "'";
         try {
             pst = conexao.prepareStatement(sql);

@@ -73,6 +73,8 @@ public class Home extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         MenuRelatorio = new javax.swing.JMenu();
         RelatorioVendas = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
         MenuAjuda = new javax.swing.JMenu();
         telaSobre = new javax.swing.JMenuItem();
         MenuOpcao = new javax.swing.JMenu();
@@ -220,6 +222,19 @@ public class Home extends javax.swing.JFrame {
             }
         });
         MenuRelatorio.add(RelatorioVendas);
+        MenuRelatorio.add(jSeparator4);
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icones/if_product.png"))); // NOI18N
+        jMenuItem3.setText("Produto/Fornecedor");
+        jMenuItem3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        MenuRelatorio.add(jMenuItem3);
 
         Menu.add(MenuRelatorio);
 
@@ -475,6 +490,18 @@ public class Home extends javax.swing.JFrame {
 
     }//GEN-LAST:event_RelatorioVendasActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        String p = HistoricoProduto.p;
+        if (p == null) {
+        HistoricoProduto historico = new HistoricoProduto();      
+        historico.setVisible(true);
+        jDesktopPane1.add(historico);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "A janela de relatório de produto já está aberta!");
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -541,11 +568,13 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JMenuItem telaSobre;
     // End of variables declaration//GEN-END:variables

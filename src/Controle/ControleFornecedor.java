@@ -1,8 +1,8 @@
 package Controle;
 
-import Modelo.ModeloCliente;
 import Modelo.ModeloFornecedor;
 import dao.Conectar;
+import dao.ConectarSqlServer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ public class ControleFornecedor {
     private int idEndereco;
 
     public void preencherCombo(JComboBox ComboBoxFornecedor) throws SQLException {
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
         String sql = "select * from fornecedor order by nome_fornecedor";
         try {
             pst = conexaoFornecedor.prepareStatement(sql);
@@ -37,7 +37,7 @@ public class ControleFornecedor {
     }
 
     public void adionarFornecedor(ModeloFornecedor modeloFornecedor) throws SQLException {
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
         try {
             String sql = "insert into endereco (nome_endereco,numero,estado_endereco,Cidade_endereco,bairro_endereco)"
                     + "values (?,?,?,?,?)";
@@ -76,7 +76,7 @@ public class ControleFornecedor {
 
     public void pesquisar_cliente(ModeloFornecedor modeloFornecedor, JTable TableFornecedor) throws SQLException {
 
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
 
         String sql = "select fornecedor.nome_fornecedor as 'Nome',fornecedor.telefone_fornecedor as 'Telefone',fornecedor.cnpj_fornecedor as 'Cnpj',fornecedor.email_fornecedor as 'Email',nome_endereco as 'Rua',numero as 'Número',bairro_endereco as 'Bairro',Cidade_endereco as 'Cidade',estado_endereco as 'Estado' from fornecedor join endereco on endereco.id_endereco = fornecedor.id_endereco where fornecedor.nome_fornecedor like ?";
         try {
@@ -94,7 +94,7 @@ public class ControleFornecedor {
     }
 
     public void atualizarCliente(ModeloFornecedor modeloFornecedor) throws SQLException {
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
         try {
             buscarIdDoEndereco(modeloFornecedor);//metodo para buscar o id do endereço
             String sql2 = "update fornecedor set nome_fornecedor=?,email_fornecedor=?,telefone_fornecedor=?,id_endereco=? where cnpj_fornecedor=?";
@@ -126,7 +126,7 @@ public class ControleFornecedor {
     }
 
     private void buscarIdDoEndereco(ModeloFornecedor modeloFornecedor) {
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
         String sql = "select * from fornecedor where cnpj_fornecedor = '" + modeloFornecedor.getCnpj() + "'";
         try {
             pst = conexaoFornecedor.prepareStatement(sql);
@@ -140,7 +140,7 @@ public class ControleFornecedor {
     }
 
     public void ExcluirCliente(ModeloFornecedor modeloFornecedor) throws SQLException {
-        this.conexaoFornecedor = new Conectar().openConnection();
+        this.conexaoFornecedor = new ConectarSqlServer().openConnection();
         String sql = "delete from fornecedor where cnpj_fornecedor = ?";
         try {
             pst = conexaoFornecedor.prepareStatement(sql);
